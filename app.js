@@ -175,16 +175,26 @@
     screen.innerHTML = `${header()}${progress()}<section class="panel drag-panel"><h2 class="instruction">${instruction}</h2><p class="hint">${removing?'Make one again.':(kind==='egg'?'Put it in the basket.':'Put it on the plate.')}</p><div class="count-stage"><div id="return-zone" class="pantry-zone" role="button" tabindex="0" data-drop="remove" aria-label="Return one ${kind} here">${!removing?`<button class="food-token source-token" data-drag="add" aria-label="Drag one ${kind}" ${S.busy?'disabled':''}><img class="food" src="assets/images/${kind}.webp" alt="${kind}" draggable="false"></button>`:icon('back')}<span class="tray-label">${removing?'Put it back':'More food'}</span></div><div class="drag-direction" aria-hidden="true">${icon(removing?'back':'next')}</div><div id="drop-zone" class="count-dish dish ${kind==='egg'?'basket':''}" data-drop="add" role="button" tabindex="0" aria-label="Put one ${kind} ${kind==='egg'?'in':'on'} the ${place}"><span class="food-group" data-count="${S.count}">${Array.from({length:S.count},(_,i)=>`<button class="food-token placed-token ${S.busy&&!removing&&i===S.count-1?'new-food':''}" data-drag="remove" aria-label="Drag ${kind} ${i+1} back" ${!removing||S.busy?'disabled':''}><img class="food" src="assets/images/${kind}.webp" alt="${kind}" draggable="false"></button>`).join('')}</span></div><button class="count-word word-audio" data-action="word" data-word="${kind}${S.count>1?'s':''}" aria-label="Listen to ${kind}${S.count>1?'s':''}"><span class="word">${word(kind,S.count)}${icon('sound')}</span></button></div>${feedback()}</section>${footer()}`;
   }
   function renderKitchen() {
-    const made=S.burgersMade, step=S.cookStep, complete=step===3;
-    screen.innerHTML=`${header()}<section class="panel kitchen-panel"><h2 class="instruction">${complete?(made===1?'One burger!':'More burgers!'):'Build a burger!'}</h2><p class="hint">${complete?'Listen and say.':'Stack the food. Bottom to top.'}</p><div class="ingredient-rail">${[0,1,2].map(i=>`<button class="ingredient" data-action="build-part" data-part="${i}" data-piece="${i}" aria-label="${['Bottom bun','Filling','Top bun'][i]}" ${complete||S.busy?'disabled':''}><span class="burger-part part-${i}"></span>${i<step?icon('check'):''}</button>`).join('')}</div><div class="burger-build-zone" id="burger-build-zone" aria-label="Build the burger here"><div class="build-plate dish"></div>${[0,1,2].filter(i=>i<step).map(i=>`<span class="burger-part stacked part-${i} layer-${i}"></span>`).join('')}${!step?`<span class="stack-target">${icon('down')}</span>`:''}</div><div class="finished-burgers">${made===2?food('burger',2):''}</div>${complete?`<button class="kitchen-word" data-action="word" data-word="${made===1?'burger':'burgers'}">${word('burger',made)}${icon('sound')}</button>`:''}<div class="kitchen-controls">${complete&&made===1?button('One more','cook-more','plus'):''}</div></section>${footer()}`;
+    const made=S.burgersMade, step=S.cookStep, complete=step===3, pair=made>0&&(!complete||made===2), served=!!S.cookServed;
+    const title=served?'Lunch for two!':pair?'A burger for each friend!':'Rabbit is hungry!';
+    const hint=served?'Yum! Thank you!':complete?(made===1?'One burger. One more friend!':'Two burgers. Ready to serve!'):['Drag or tap the bun.','Add the filling.','Pop the top on!'][step];
+    screen.innerHTML=`${header()}<section class="panel kitchen-panel playful-kitchen ${served?'meal-served':''}"><h2 class="instruction">${title}</h2><p class="hint">${hint}<button class="guide-replay" data-action="word" data-word="${served?'yum_friend':complete?(made===1?'burger':'burgers'):'kitchen_intro'}" aria-label="Listen to the instructions">${icon('sound')}</button></p><div class="cook-friends ${pair?'two-friends':''}" id="cook-friends" aria-label="Serve your friends here">${(pair?[0,1]:[0]).map(i=>`<div class="cook-friend"><div class="customer-avatar customer-${i}"></div><span class="cook-name">${i?'Turtle':'Rabbit'}</span><div class="cook-wish ${served?'happy':''}">${served?`<span>Yum!</span>`:`<img src="assets/images/burger.webp" alt="One burger please">`}</div>${served?`<img class="friend-burger" src="assets/images/burger.webp" alt="A burger for ${i?'Turtle':'Rabbit'}">`:''}</div>`).join('')}</div><div class="burger-build-zone" id="burger-build-zone" aria-label="Build the burger here"><div class="build-plate dish"></div>${!served&&made<2?[0,1,2].filter(i=>i<step).map(i=>`<span class="burger-part stacked part-${i} layer-${i} ${i===step-1?'fresh-layer':''}"></span>`).join(''):''}${!step?`<span class="bun-outline burger-part part-0" aria-hidden="true"></span>`:''}</div>${made===1&&!complete?`<div class="saved-burger"><img src="assets/images/burger.webp" alt="First burger ready">${icon('check')}</div>`:''}${made===2&&!served?`<button class="ready-lunch" data-action="cook-serve" data-cook-meal="true" aria-label="Drag the burgers to your friends or tap to serve" ${S.busy?'disabled':''}>${food('burger',2)}</button>`:''}${!complete?`<div class="ingredient-rail">${[0,1,2].map(i=>`<button class="ingredient ${i===step?'next-ingredient':''}" data-action="build-part" data-part="${i}" data-piece="${i}" aria-label="${['Bottom bun','Filling','Top bun'][i]}" ${i<step||S.busy?'disabled':''}><span class="burger-part part-${i}"></span>${i<step?icon('check'):''}</button>`).join('')}</div>`:''}${complete?`<button class="kitchen-word" data-action="word" data-word="${made===1?'burger':'burgers'}">${word('burger',made)}${icon('sound')}</button>`:''}<div class="kitchen-controls">${complete&&!served?(made===1?button('One more!','cook-more','plus',false,S.busy):button('Serve lunch!','cook-serve','next',false,S.busy)):''}</div></section>${footer()}`;
   }
   async function buildPart(i) {
     if(S.scene!==6||S.guide||S.busy||S.cookStep===3)return;
     if(i!==S.cookStep){effect('tap');$('.ingredient[data-part="'+S.cookStep+'"]')?.animate([{scale:1},{scale:1.12},{scale:1}],{duration:500});return;}
-    const epoch=sceneEpoch;S.busy=true;S.cookStep++;effect('discover');render();
-    await new Promise(r=>setTimeout(r,380));if(epoch!==sceneEpoch)return;
-    if(S.cookStep===3){S.burgersMade++;S.count=S.burgersMade;S.countPassed.burger=S.burgersMade===2;render();await praise([S.burgersMade===1?'burger':'burgers','nice']);}
+    const epoch=sceneEpoch;S.busy=true;S.cookStep++;effect('discover');render();if(!matchMedia('(prefers-reduced-motion: reduce)').matches)$('.stacked.layer-'+i)?.animate([{transform:'translateY(-70px) rotate(-8deg)',opacity:0},{transform:'translateY(8px) scale(1.06,.92)',opacity:1,offset:.65},{transform:'none',opacity:1}],{duration:420,easing:'ease-out'});log('burger-layer',{part:i,burger:S.burgersMade+1});
+    await new Promise(r=>setTimeout(r,420));if(epoch!==sceneEpoch)return;
+    if(S.cookStep===3){S.burgersMade++;S.count=S.burgersMade;render();await say(S.burgersMade===1?'burger':'burgers');}
     if(epoch===sceneEpoch){S.busy=false;render();}
+  }
+  async function serveBurgers(){
+    if(S.scene!==6||S.burgersMade!==2||S.cookServed||S.busy)return;
+    const epoch=sceneEpoch;S.busy=true;effect('correct');
+    const plate=$('.ready-lunch');
+    if(plate&&!matchMedia('(prefers-reduced-motion: reduce)').matches)await plate.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:'translate(-450px,-60px) scale(.55)',opacity:0}],{duration:650,easing:'ease-in-out',fill:'forwards'}).finished.catch(()=>{});
+    if(epoch!==sceneEpoch)return;
+    S.cookServed=true;S.countPassed.burger=true;S.busy=false;render();log('burgers-served',{count:2});sequence(['burgers','yum_friend']);
   }
   function trayAdd(kind) {
     if(S.scene!==7||S.guide||S.answered||S.busy||S.tray.length>=3)return;
@@ -292,7 +302,7 @@
       ready(); scheduleLidHint(); return;
     }
     if (scene === 3) return playSceneMedia(3, () => go(4));
-    if (scene === 6) {S.cookStep=0;S.burgersMade=0;S.count=0;ready();if(!opts.skipIntro)startGuide('kitchen');else say('burger');return;}
+    if (scene === 6) {S.cookStep=0;S.burgersMade=0;S.cookServed=false;S.count=0;delete S.countPassed.burger;ready();say('kitchen_intro');return;}
     if (scene >= 4 && scene <= 5) {
       S.count = 1; S.countPhase = 'add'; delete S.countPassed[kindNow()];
       const begin = () => { ready(); sayExtra('drag_' + kindNow(), 'add_' + kindNow()); };
@@ -369,7 +379,8 @@
     if (action === 'discover') { openFoodCard(el); return; }
     if (action === 'word') { say(el.dataset.word); return; }
     if(action==='build-part'){if(performance.now()-lastPointerDrag>250)return buildPart(+el.dataset.part);return;}
-    if(action==='cook-more'){S.cookStep=0;S.busy=false;render();say('add_burger');return;}
+    if(action==='cook-more'){if(S.busy||S.burgersMade!==1||S.cookStep!==3)return;S.cookStep=0;render();say('add_burger');return;}
+    if(action==='cook-serve'){if(performance.now()-lastPointerDrag>250)serveBurgers();return;}
     if(action==='tray-add'){if(performance.now()-lastPointerDrag>250)trayAdd(el.dataset.kind);return;}
     if(action==='tray-remove')return trayRemove(+el.dataset.index);
     if(action==='serve-tray')return serveTray();
@@ -424,8 +435,8 @@
     document.querySelectorAll('.drop-hint').forEach(el=>el.classList.remove('drop-hint'));
   }
   stage.addEventListener('pointerdown',e=>{
-    const special=e.target.closest('[data-order-food],[data-piece]');
-    if(special&&!special.disabled&&!S.busy&&e.button===0){const r=stage.getBoundingClientRect(),scale=r.width/1920;const ghost=special.cloneNode(true);ghost.className='play-drag-ghost '+(special.dataset.piece!==undefined?'ingredient':'pantry-food');ghost.removeAttribute('data-action');ghost.style.left=((e.clientX-r.left)/scale-90)+'px';ghost.style.top=((e.clientY-r.top)/scale-90)+'px';stage.append(ghost);special.setPointerCapture(e.pointerId);drag={el:special,ghost,id:e.pointerId,x:e.clientX,y:e.clientY,moved:false,type:special.dataset.piece!==undefined?'piece':'order',value:special.dataset.piece??special.dataset.orderFood};e.preventDefault();return;}
+    const special=e.target.closest('[data-order-food],[data-piece],[data-cook-meal]');
+    if(special&&!special.disabled&&!S.busy&&e.button===0){const r=stage.getBoundingClientRect(),scale=r.width/1920;const ghost=special.cloneNode(true);ghost.className='play-drag-ghost '+(special.dataset.cookMeal?'meal-ghost':special.dataset.piece!==undefined?'ingredient':'pantry-food');ghost.removeAttribute('data-action');ghost.style.left=((e.clientX-r.left)/scale-90)+'px';ghost.style.top=((e.clientY-r.top)/scale-90)+'px';stage.append(ghost);special.setPointerCapture(e.pointerId);drag={el:special,ghost,id:e.pointerId,x:e.clientX,y:e.clientY,moved:false,type:special.dataset.cookMeal?'meal':special.dataset.piece!==undefined?'piece':'order',value:special.dataset.piece??special.dataset.orderFood};e.preventDefault();return;}
     const el=e.target.closest('[data-drag]');
     if(!el||el.disabled||S.busy||e.button!==0)return;
     const r=stage.getBoundingClientRect(),scale=r.width/1920;
@@ -444,6 +455,7 @@
   stage.addEventListener('pointerup',e=>{
     if(!drag||drag.id!==e.pointerId)return;
     const d=drag;
+    if(d.type==='meal'){const z=$('#cook-friends').getBoundingClientRect(),good=!d.moved||(e.clientX>=z.left&&e.clientX<=z.right&&e.clientY>=z.top&&e.clientY<=z.bottom);cancelFoodDrag();lastPointerDrag=performance.now();if(good)serveBurgers();return;}
     if(['piece','order'].includes(d.type)){const z=$(d.type==='piece'?'#burger-build-zone':'#order-tray').getBoundingClientRect(),good=d.moved&&e.clientX>=z.left&&e.clientX<=z.right&&e.clientY>=z.top&&e.clientY<=z.bottom;cancelFoodDrag();if(d.moved)lastPointerDrag=performance.now();if(good){if(d.type==='piece')buildPart(+d.value);else trayAdd(d.value);}else if(!d.moved){lastPointerDrag=performance.now();if(d.type==='piece')buildPart(+d.value);else trayAdd(d.value);}return;}
     const zone=$(d.type==='add'?'#drop-zone':'#return-zone').getBoundingClientRect();
     const good=d.moved&&e.clientX>=zone.left&&e.clientX<=zone.right&&e.clientY>=zone.top&&e.clientY<=zone.bottom;

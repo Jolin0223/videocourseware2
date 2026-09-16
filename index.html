@@ -600,6 +600,50 @@ button span{pointer-events:none}
 .cover-title-audio{position:absolute;right:48px;top:44px;z-index:12}
 @media(prefers-reduced-motion:reduce){.bobo-reaction.cheer img{animation:none;opacity:1}}
 
+/* V4: a small working kitchen, with guidance in the play itself. */
+.playful-kitchen .instruction{font-size:48px;margin-left:30px;margin-right:30px}
+.playful-kitchen .hint{display:flex;align-items:center;justify-content:center;gap:10px;font-size:33px}
+.playful-kitchen .cook-friends{position:absolute;left:42px;top:180px;width:350px;height:330px;display:flex;justify-content:center;align-items:center;gap:12px;border-radius:45px}
+.cook-friend{position:relative;width:260px;text-align:center;flex-shrink:0}
+.cook-friend .customer-avatar{width:225px;height:215px;margin:0 auto;border:7px solid #fff9eb;box-shadow:0 6px 0 #d9c39b55}
+.cook-name{display:block;font:30px 'Heinemann Bold';color:#497968;margin-top:12px}
+.cook-wish{position:absolute;right:-18px;top:-35px;width:106px;height:107px;background:#fff9e6;border:3px solid #e0be77;border-radius:30px 30px 30px 5px;display:grid;place-items:center;transform:rotate(6deg)}
+.cook-wish img{width:90px;height:90px;object-fit:contain}.cook-wish.happy{font:31px 'Heinemann Bold';color:#578454}
+.two-friends{flex-direction:column;gap:0!important;top:155px!important;height:375px!important}
+.two-friends .cook-friend{width:220px;height:185px;display:flex;align-items:center}
+.two-friends .customer-avatar{width:145px;height:138px;margin:0}.two-friends .cook-name{position:absolute;bottom:0;left:0;width:145px;font-size:25px;margin:0}
+.two-friends .cook-wish{width:85px;height:85px;right:0;top:15px}.two-friends .cook-wish img{width:72px;height:72px}
+.playful-kitchen .burger-build-zone{left:470px;top:145px;width:565px;height:325px}
+.playful-kitchen .stacked{animation:none}.playful-kitchen .stacked.fresh-layer{animation:layer-settle .42s ease-out}
+@keyframes layer-settle{0%{transform:translateY(-70px) rotate(-8deg);opacity:0}65%{transform:translateY(8px) scale(1.06,.92);opacity:1}100%{transform:none;opacity:1}}
+.bun-outline{position:absolute;left:128px;top:120px;width:310px;height:226px;opacity:.18;filter:sepia(.7)}
+.playful-kitchen .ingredient-rail{top:auto;bottom:59px;left:432px;width:735px;flex-direction:row;gap:17px}
+.playful-kitchen .ingredient{width:218px;height:120px;background:#faf3df;border-color:#decdab;box-shadow:0 5px 0 #d6c09b44;transition:transform .2s}
+.playful-kitchen .ingredient.next-ingredient{border-color:#ddae53;box-shadow:0 0 0 5px #f6d57766,0 6px 0 #ccb58355;background:#fff7df}
+.playful-kitchen .ingredient:not(:disabled):hover{transform:translateY(-6px)}
+.cook-touch-hint{position:absolute;bottom:22px;left:432px;width:690px;text-align:center;font:25px 'Heinemann Roman';color:#759385}
+.saved-burger{position:absolute;left:1070px;top:260px;width:130px;height:145px}.saved-burger img{width:130px;height:130px;object-fit:contain}.saved-burger .icon{position:absolute;right:0;bottom:0;width:33px;height:33px;color:#518265;background:#eef5df;border-radius:50%}
+.ready-lunch{position:absolute;left:470px;top:153px;width:565px;height:325px;border:0;background:none;touch-action:none;cursor:grab;z-index:4}
+.ready-lunch .food{width:235px!important;height:255px!important}.ready-lunch .food-group{flex-wrap:nowrap;gap:10px}.ready-lunch:active{cursor:grabbing}
+.playful-kitchen .kitchen-word{left:475px;bottom:47px;font-size:50px;height:100px;background:none;padding:0;gap:12px}
+.playful-kitchen .kitchen-controls{right:53px;bottom:49px}.playful-kitchen .kitchen-controls .btn{min-width:300px;font-size:33px;padding:0 23px;height:95px}
+.playful-kitchen:has(.ready-lunch) .burger-build-zone{visibility:visible}
+.friend-burger{position:absolute;left:65px;top:85px;width:95px;height:95px;object-fit:contain;animation:layer-settle .45s ease-out}
+.meal-served .cook-friends{left:370px;width:590px;flex-direction:row;gap:60px!important;top:175px!important}.meal-served .cook-friend{transform:scale(1.45)}
+.meal-served .burger-build-zone{visibility:hidden}.meal-served .kitchen-word{left:520px}
+.play-drag-ghost.meal-ghost{width:290px;height:200px;background:none;border:0}.meal-ghost .food{width:125px!important;height:160px!important}
+@media(prefers-reduced-motion:reduce){.playful-kitchen .stacked.fresh-layer,.friend-burger{animation:none}.playful-kitchen .ingredient{transition:none}}
+.playful-kitchen .stacked.fresh-layer{animation:none}
+.cook-friend .customer-avatar{height:187px;background-size:1025px 586px}
+.cook-friend .customer-0{background-position:-11px -191px}.cook-friend .customer-1{background-position:-198px -221px}
+.two-friends .customer-avatar{height:120px;background-size:661px 377px}
+.two-friends .customer-0{background-position:-7px -123px}.two-friends .customer-1{background-position:-128px -142px}
+.playful-kitchen .ingredient-rail{bottom:108px}.cook-touch-hint{bottom:72px}
+.playful-kitchen .kitchen-controls{bottom:89px;right:87px}.playful-kitchen .kitchen-word{bottom:89px}
+.cook-friend .customer-0{background-position:-107px -237px}.cook-friend .customer-1{background-position:-259px -271px}
+.two-friends .customer-0{background-position:-69px -152px}.two-friends .customer-1{background-position:-167px -174px}
+.meal-served .friend-burger{left:142px;top:112px;width:82px;height:82px}
+
 </style>
 </head>
 <body>
@@ -815,16 +859,26 @@ window.BOBO_LESSON = {
     screen.innerHTML = `${header()}${progress()}<section class="panel drag-panel"><h2 class="instruction">${instruction}</h2><p class="hint">${removing?'Make one again.':(kind==='egg'?'Put it in the basket.':'Put it on the plate.')}</p><div class="count-stage"><div id="return-zone" class="pantry-zone" role="button" tabindex="0" data-drop="remove" aria-label="Return one ${kind} here">${!removing?`<button class="food-token source-token" data-drag="add" aria-label="Drag one ${kind}" ${S.busy?'disabled':''}><img class="food" src="assets/images/${kind}.webp" alt="${kind}" draggable="false"></button>`:icon('back')}<span class="tray-label">${removing?'Put it back':'More food'}</span></div><div class="drag-direction" aria-hidden="true">${icon(removing?'back':'next')}</div><div id="drop-zone" class="count-dish dish ${kind==='egg'?'basket':''}" data-drop="add" role="button" tabindex="0" aria-label="Put one ${kind} ${kind==='egg'?'in':'on'} the ${place}"><span class="food-group" data-count="${S.count}">${Array.from({length:S.count},(_,i)=>`<button class="food-token placed-token ${S.busy&&!removing&&i===S.count-1?'new-food':''}" data-drag="remove" aria-label="Drag ${kind} ${i+1} back" ${!removing||S.busy?'disabled':''}><img class="food" src="assets/images/${kind}.webp" alt="${kind}" draggable="false"></button>`).join('')}</span></div><button class="count-word word-audio" data-action="word" data-word="${kind}${S.count>1?'s':''}" aria-label="Listen to ${kind}${S.count>1?'s':''}"><span class="word">${word(kind,S.count)}${icon('sound')}</span></button></div>${feedback()}</section>${footer()}`;
   }
   function renderKitchen() {
-    const made=S.burgersMade, step=S.cookStep, complete=step===3;
-    screen.innerHTML=`${header()}<section class="panel kitchen-panel"><h2 class="instruction">${complete?(made===1?'One burger!':'More burgers!'):'Build a burger!'}</h2><p class="hint">${complete?'Listen and say.':'Stack the food. Bottom to top.'}</p><div class="ingredient-rail">${[0,1,2].map(i=>`<button class="ingredient" data-action="build-part" data-part="${i}" data-piece="${i}" aria-label="${['Bottom bun','Filling','Top bun'][i]}" ${complete||S.busy?'disabled':''}><span class="burger-part part-${i}"></span>${i<step?icon('check'):''}</button>`).join('')}</div><div class="burger-build-zone" id="burger-build-zone" aria-label="Build the burger here"><div class="build-plate dish"></div>${[0,1,2].filter(i=>i<step).map(i=>`<span class="burger-part stacked part-${i} layer-${i}"></span>`).join('')}${!step?`<span class="stack-target">${icon('down')}</span>`:''}</div><div class="finished-burgers">${made===2?food('burger',2):''}</div>${complete?`<button class="kitchen-word" data-action="word" data-word="${made===1?'burger':'burgers'}">${word('burger',made)}${icon('sound')}</button>`:''}<div class="kitchen-controls">${complete&&made===1?button('One more','cook-more','plus'):''}</div></section>${footer()}`;
+    const made=S.burgersMade, step=S.cookStep, complete=step===3, pair=made>0&&(!complete||made===2), served=!!S.cookServed;
+    const title=served?'Lunch for two!':pair?'A burger for each friend!':'Rabbit is hungry!';
+    const hint=served?'Yum! Thank you!':complete?(made===1?'One burger. One more friend!':'Two burgers. Ready to serve!'):['Drag or tap the bun.','Add the filling.','Pop the top on!'][step];
+    screen.innerHTML=`${header()}<section class="panel kitchen-panel playful-kitchen ${served?'meal-served':''}"><h2 class="instruction">${title}</h2><p class="hint">${hint}<button class="guide-replay" data-action="word" data-word="${served?'yum_friend':complete?(made===1?'burger':'burgers'):'kitchen_intro'}" aria-label="Listen to the instructions">${icon('sound')}</button></p><div class="cook-friends ${pair?'two-friends':''}" id="cook-friends" aria-label="Serve your friends here">${(pair?[0,1]:[0]).map(i=>`<div class="cook-friend"><div class="customer-avatar customer-${i}"></div><span class="cook-name">${i?'Turtle':'Rabbit'}</span><div class="cook-wish ${served?'happy':''}">${served?`<span>Yum!</span>`:`<img src="assets/images/burger.webp" alt="One burger please">`}</div>${served?`<img class="friend-burger" src="assets/images/burger.webp" alt="A burger for ${i?'Turtle':'Rabbit'}">`:''}</div>`).join('')}</div><div class="burger-build-zone" id="burger-build-zone" aria-label="Build the burger here"><div class="build-plate dish"></div>${!served&&made<2?[0,1,2].filter(i=>i<step).map(i=>`<span class="burger-part stacked part-${i} layer-${i} ${i===step-1?'fresh-layer':''}"></span>`).join(''):''}${!step?`<span class="bun-outline burger-part part-0" aria-hidden="true"></span>`:''}</div>${made===1&&!complete?`<div class="saved-burger"><img src="assets/images/burger.webp" alt="First burger ready">${icon('check')}</div>`:''}${made===2&&!served?`<button class="ready-lunch" data-action="cook-serve" data-cook-meal="true" aria-label="Drag the burgers to your friends or tap to serve" ${S.busy?'disabled':''}>${food('burger',2)}</button>`:''}${!complete?`<div class="ingredient-rail">${[0,1,2].map(i=>`<button class="ingredient ${i===step?'next-ingredient':''}" data-action="build-part" data-part="${i}" data-piece="${i}" aria-label="${['Bottom bun','Filling','Top bun'][i]}" ${i<step||S.busy?'disabled':''}><span class="burger-part part-${i}"></span>${i<step?icon('check'):''}</button>`).join('')}</div>`:''}${complete?`<button class="kitchen-word" data-action="word" data-word="${made===1?'burger':'burgers'}">${word('burger',made)}${icon('sound')}</button>`:''}<div class="kitchen-controls">${complete&&!served?(made===1?button('One more!','cook-more','plus',false,S.busy):button('Serve lunch!','cook-serve','next',false,S.busy)):''}</div></section>${footer()}`;
   }
   async function buildPart(i) {
     if(S.scene!==6||S.guide||S.busy||S.cookStep===3)return;
     if(i!==S.cookStep){effect('tap');$('.ingredient[data-part="'+S.cookStep+'"]')?.animate([{scale:1},{scale:1.12},{scale:1}],{duration:500});return;}
-    const epoch=sceneEpoch;S.busy=true;S.cookStep++;effect('discover');render();
-    await new Promise(r=>setTimeout(r,380));if(epoch!==sceneEpoch)return;
-    if(S.cookStep===3){S.burgersMade++;S.count=S.burgersMade;S.countPassed.burger=S.burgersMade===2;render();await praise([S.burgersMade===1?'burger':'burgers','nice']);}
+    const epoch=sceneEpoch;S.busy=true;S.cookStep++;effect('discover');render();if(!matchMedia('(prefers-reduced-motion: reduce)').matches)$('.stacked.layer-'+i)?.animate([{transform:'translateY(-70px) rotate(-8deg)',opacity:0},{transform:'translateY(8px) scale(1.06,.92)',opacity:1,offset:.65},{transform:'none',opacity:1}],{duration:420,easing:'ease-out'});log('burger-layer',{part:i,burger:S.burgersMade+1});
+    await new Promise(r=>setTimeout(r,420));if(epoch!==sceneEpoch)return;
+    if(S.cookStep===3){S.burgersMade++;S.count=S.burgersMade;render();await say(S.burgersMade===1?'burger':'burgers');}
     if(epoch===sceneEpoch){S.busy=false;render();}
+  }
+  async function serveBurgers(){
+    if(S.scene!==6||S.burgersMade!==2||S.cookServed||S.busy)return;
+    const epoch=sceneEpoch;S.busy=true;effect('correct');
+    const plate=$('.ready-lunch');
+    if(plate&&!matchMedia('(prefers-reduced-motion: reduce)').matches)await plate.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:'translate(-450px,-60px) scale(.55)',opacity:0}],{duration:650,easing:'ease-in-out',fill:'forwards'}).finished.catch(()=>{});
+    if(epoch!==sceneEpoch)return;
+    S.cookServed=true;S.countPassed.burger=true;S.busy=false;render();log('burgers-served',{count:2});sequence(['burgers','yum_friend']);
   }
   function trayAdd(kind) {
     if(S.scene!==7||S.guide||S.answered||S.busy||S.tray.length>=3)return;
@@ -932,7 +986,7 @@ window.BOBO_LESSON = {
       ready(); scheduleLidHint(); return;
     }
     if (scene === 3) return playSceneMedia(3, () => go(4));
-    if (scene === 6) {S.cookStep=0;S.burgersMade=0;S.count=0;ready();if(!opts.skipIntro)startGuide('kitchen');else say('burger');return;}
+    if (scene === 6) {S.cookStep=0;S.burgersMade=0;S.cookServed=false;S.count=0;delete S.countPassed.burger;ready();say('kitchen_intro');return;}
     if (scene >= 4 && scene <= 5) {
       S.count = 1; S.countPhase = 'add'; delete S.countPassed[kindNow()];
       const begin = () => { ready(); sayExtra('drag_' + kindNow(), 'add_' + kindNow()); };
@@ -1009,7 +1063,8 @@ window.BOBO_LESSON = {
     if (action === 'discover') { openFoodCard(el); return; }
     if (action === 'word') { say(el.dataset.word); return; }
     if(action==='build-part'){if(performance.now()-lastPointerDrag>250)return buildPart(+el.dataset.part);return;}
-    if(action==='cook-more'){S.cookStep=0;S.busy=false;render();say('add_burger');return;}
+    if(action==='cook-more'){if(S.busy||S.burgersMade!==1||S.cookStep!==3)return;S.cookStep=0;render();say('add_burger');return;}
+    if(action==='cook-serve'){if(performance.now()-lastPointerDrag>250)serveBurgers();return;}
     if(action==='tray-add'){if(performance.now()-lastPointerDrag>250)trayAdd(el.dataset.kind);return;}
     if(action==='tray-remove')return trayRemove(+el.dataset.index);
     if(action==='serve-tray')return serveTray();
@@ -1064,8 +1119,8 @@ window.BOBO_LESSON = {
     document.querySelectorAll('.drop-hint').forEach(el=>el.classList.remove('drop-hint'));
   }
   stage.addEventListener('pointerdown',e=>{
-    const special=e.target.closest('[data-order-food],[data-piece]');
-    if(special&&!special.disabled&&!S.busy&&e.button===0){const r=stage.getBoundingClientRect(),scale=r.width/1920;const ghost=special.cloneNode(true);ghost.className='play-drag-ghost '+(special.dataset.piece!==undefined?'ingredient':'pantry-food');ghost.removeAttribute('data-action');ghost.style.left=((e.clientX-r.left)/scale-90)+'px';ghost.style.top=((e.clientY-r.top)/scale-90)+'px';stage.append(ghost);special.setPointerCapture(e.pointerId);drag={el:special,ghost,id:e.pointerId,x:e.clientX,y:e.clientY,moved:false,type:special.dataset.piece!==undefined?'piece':'order',value:special.dataset.piece??special.dataset.orderFood};e.preventDefault();return;}
+    const special=e.target.closest('[data-order-food],[data-piece],[data-cook-meal]');
+    if(special&&!special.disabled&&!S.busy&&e.button===0){const r=stage.getBoundingClientRect(),scale=r.width/1920;const ghost=special.cloneNode(true);ghost.className='play-drag-ghost '+(special.dataset.cookMeal?'meal-ghost':special.dataset.piece!==undefined?'ingredient':'pantry-food');ghost.removeAttribute('data-action');ghost.style.left=((e.clientX-r.left)/scale-90)+'px';ghost.style.top=((e.clientY-r.top)/scale-90)+'px';stage.append(ghost);special.setPointerCapture(e.pointerId);drag={el:special,ghost,id:e.pointerId,x:e.clientX,y:e.clientY,moved:false,type:special.dataset.cookMeal?'meal':special.dataset.piece!==undefined?'piece':'order',value:special.dataset.piece??special.dataset.orderFood};e.preventDefault();return;}
     const el=e.target.closest('[data-drag]');
     if(!el||el.disabled||S.busy||e.button!==0)return;
     const r=stage.getBoundingClientRect(),scale=r.width/1920;
@@ -1084,6 +1139,7 @@ window.BOBO_LESSON = {
   stage.addEventListener('pointerup',e=>{
     if(!drag||drag.id!==e.pointerId)return;
     const d=drag;
+    if(d.type==='meal'){const z=$('#cook-friends').getBoundingClientRect(),good=!d.moved||(e.clientX>=z.left&&e.clientX<=z.right&&e.clientY>=z.top&&e.clientY<=z.bottom);cancelFoodDrag();lastPointerDrag=performance.now();if(good)serveBurgers();return;}
     if(['piece','order'].includes(d.type)){const z=$(d.type==='piece'?'#burger-build-zone':'#order-tray').getBoundingClientRect(),good=d.moved&&e.clientX>=z.left&&e.clientX<=z.right&&e.clientY>=z.top&&e.clientY<=z.bottom;cancelFoodDrag();if(d.moved)lastPointerDrag=performance.now();if(good){if(d.type==='piece')buildPart(+d.value);else trayAdd(d.value);}else if(!d.moved){lastPointerDrag=performance.now();if(d.type==='piece')buildPart(+d.value);else trayAdd(d.value);}return;}
     const zone=$(d.type==='add'?'#drop-zone':'#return-zone').getBoundingClientRect();
     const good=d.moved&&e.clientX>=zone.left&&e.clientX<=zone.right&&e.clientY>=zone.top&&e.clientY<=zone.bottom;
