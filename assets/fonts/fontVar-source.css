@@ -1,0 +1,292 @@
+@import url('./hanyi.css');
+@import url('./fangzheng.css');
+
+/* 压缩 有问题修改后缀 TTF  woff   https://iteachcdn.xdf.cn/mmcw/font/fontRescource */
+@font-face {
+  font-family: "方正粗圆简体";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/cuyuan.woff");
+}
+@font-face {
+  font-family: "FZY4JW--GB1";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/cuyuan.woff");
+}
+@font-face {
+  font-family: "字小魂机械体";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/zixiaohunjiexieti.ttf");
+}
+@font-face {
+  font-family: "PingFang SC";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/PingFangSC-Regular.ttf");
+}
+@font-face{ font-family: "方正楷体拼音字库01"; src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/FZKTPY01--GB1-0-01.ttf")}
+@font-face{ font-family: "方正楷体拼音字库02"; src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/FZKTPY02--GB1-0-02.ttf")}
+@font-face{ font-family: "方正楷体拼音字库03"; src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/FZKTPY03--GB1-0-03.ttf")}
+@font-face{ font-family: "方正楷体拼音字库04"; src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/FZKTPY04--GB1-0-04.ttf")}
+@font-face{ font-family: "方正楷体拼音字库05"; src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/FZKTPY05--GB1-0-05.ttf")}
+@font-face{ font-family: "方正楷体拼音字库06"; src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/FZKTPY06--GB1-0-06.ttf")}
+@font-face{ font-family: "RjPinyin"; src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/RJPINYIN.TTF")}
+@font-face{ font-family: "Heinemann Bold"; src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/Heinemann-Bold.otf")}
+@font-face{ font-family: "Heinemann BlackItalic"; src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/Heinemann-BlackItalic.otf")}
+@font-face{ font-family: "Heinemann Black"; src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/Heinemann-Black.otf")}
+@font-face{ font-family: "Heinemann BoldItalic"; src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/Heinemann-BoldItalic.otf")}
+@font-face{ font-family: "Heinemann Roman"; src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/Heinemann-Roman.otf")}
+@font-face{ font-family: "Heinemann RomanItalic"; src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/Heinemann-RomanItalic.otf")}
+@font-face {
+  font-family: "Comic";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/comicsansms.ttf");
+}
+@font-face {
+  font-family: "shuangyu-SU";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/shuangyu-SU.ttf");
+}
+@font-face {
+  font-family: "shuangyu-SU-line";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/shuangyu-SU-Lines-1.10.ttf");
+}
+@font-face {
+  font-family: "Italic Adjust";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/ITALICADJUST.ttf");
+}
+@font-face {
+  font-family: "方正楷体简体";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/kaiti.woff");
+}
+@font-face {
+  font-family: "FZKai-Z03S";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/kaiti.woff");
+}
+@font-face {
+  font-family: "iTeach拼音";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/iteachpinyin.ttf");
+}
+@font-face {
+  font-family: "自研-汉语拼音字体包";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/iteachpinyin.ttf");
+}
+@font-face {
+  font-family: "楷体";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/kaiti.woff");
+}
+@font-face {
+  font-family: "方正综艺简体";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/FZZYJW.woff");
+}
+@font-face {
+  font-family: "华文琥珀";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/huawenhupo.ttf");
+}
+@font-face {
+  font-family: "方正胖娃简体";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/FZPWJW.TTF");
+}
+@font-face {
+  font-family: "STHupo";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/huawenhupo.ttf");
+}
+@font-face {
+  font-family: "汉仪铸字杂货铺简";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/HYZhuZiZaHuoPuJ.ttf");
+}
+@font-face {
+  font-family: "方正楷体拼音字库";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/fangzhengkaitipinyinziku.TTC");
+}
+@font-face {
+  font-family: "英文印刷标准手写体";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/englishbiaozhunshouxie.ttf");
+}
+@font-face {
+  font-family: "英文教学标准四线四虚线微调手写体";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/ltalicJXFourFourAdjust.ttf");
+}
+@font-face {
+  font-family: "Italic JX Four Four Adjust";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/ltalicJXFourFourAdjust.ttf");
+}
+/* 压缩 有问题修改后缀 ttf  woff */
+@font-face {
+  font-family: "方正准圆简体";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/FZZYJT.woff");
+}
+@font-face {
+  font-family: "FZZhunYuan-M02S";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/FZZYJT.woff");
+}
+@font-face {
+  font-family: "汉仪糯米团W";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/HYNuoMiTuanW.woff");
+}
+@font-face {
+  font-family: "汉仪糯米团简";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/HYNuoMiTuanW.woff");
+}
+@font-face {
+  font-family: "HYNuoMiTuanW";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/HYNuoMiTuanW.woff");
+}
+@font-face {
+  font-family: "微软雅黑";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/MicrosoftYaHei.woff");
+}
+@font-face {
+  font-family: "Microsoft YaHei";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/MicrosoftYaHei.woff");
+}
+@font-face {
+  font-family: "calibri";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/calibri.woff");
+}
+
+@font-face {
+  font-family: "Arial";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/Arial.woff");
+}
+@font-face {
+  font-family: "Times New Roman";
+  font-style: normal;
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/TimesNewRoman.woff");
+  font-weight: normal;
+}
+@font-face {
+  font-family: "Times New Roman";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/timesi.woff");
+  font-weight: normal;
+  font-style: italic;
+  /* new roman斜体 */
+}
+/* 未压缩 */
+
+@font-face {
+  font-family: "PinYinok";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/Pinyinok1.TTF");
+}
+
+@font-face {
+  font-family: "GB Pinyinok-A";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/Pinyinok1.TTF");
+}
+
+@font-face {
+  font-family: "Comic Sans MS";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/comicsansms.ttf");
+}
+
+@font-face {
+  font-family: "Times New Roman";
+  font-style: normal;
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/TimesNewRoman.ttf");
+  font-weight: normal;
+}
+@font-face {
+  font-family: "Times New Roman";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/timesi.ttf");
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Times New Roman";
+  font-style: italic;
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/timesi.ttf");
+}
+
+@font-face {
+  font-family: "Arial Rounded Bold";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/ArialRoundedBold.ttf");
+}
+
+@font-face {
+  font-family: "Arial Rounded MT Bold";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/ArialRoundedBold.ttf");
+}
+@font-face {
+  font-family: "Arial Black";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/ArialBlack.ttf");
+}
+
+@font-face {
+  font-family: "Chalkboard";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/Chalkboard.ttf");
+}
+
+@font-face {
+  font-family: "MarkerFelt";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/MarkerFelt.ttf");
+}
+
+@font-face {
+  font-family: "Sassoon Infant";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/SassoonInfant.ttf");
+}
+
+@font-face {
+  font-family: "Sassoon Infant Rg";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/SassoonInfant.ttf");
+}
+
+@font-face {
+  font-family: "Century Gothic";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/CenturyGothic.TTF");
+}
+
+@font-face {
+  font-family: "Symbol";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/symbol.ttf");
+}
+
+@font-face {
+  font-family: "Jotting";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/Jotting.ttf");
+}
+
+@font-face {
+  font-family: "Kinqsoft Phonetic Plain";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/KinqsoftPhoneticPlain.ttf");
+}
+
+@font-face {
+  font-family: "Marydale";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/Marydale.ttf");
+}
+
+@font-face {
+  font-family: "SCRIPT1 Rager Hevvy";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/SCRIPT1RagerHevvy.ttf");
+}
+
+@font-face {
+  font-family: "Segoe Print";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/SegoePrint.ttf");
+}
+
+@font-face {
+  font-family: "GCFruBol";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/GCFruBol.ttf");
+}
+@font-face {
+  font-family: "GCFruRom";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/GCFruRom.ttf");
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/JetBrainsMono.ttf");
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/JetBrainsMono.ttf");
+}
+@font-face {
+  font-family: "DIN Condensed";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/DINCondensedBold.ttf");
+  font-weight: bold;
+}
+@font-face {
+  font-family: "Arial Bold";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/fontRescource/arialbd.ttf");
+}
+
+@font-face {
+  font-family: "DINAlternate";
+  src: url("https://iteachcdn.xdf.cn/mmcw/font/other/DINAlternateBold.ttf");
+}

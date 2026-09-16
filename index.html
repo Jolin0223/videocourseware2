@@ -1,0 +1,1146 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>Bobo's Magic Lunch Truck · 第四版 V4</title>
+  <link rel="preload" href="assets/fonts/Heinemann-Roman.otf" as="font" type="font/otf" crossorigin>
+  <link rel="preload" href="assets/fonts/Heinemann-Bold.otf" as="font" type="font/otf" crossorigin>
+  <style>
+@font-face{font-family:'Heinemann Roman';src:url('assets/fonts/Heinemann-Roman.otf') format('opentype');font-display:block}
+@font-face{font-family:'Heinemann Bold';src:url('assets/fonts/Heinemann-Bold.otf') format('opentype');font-display:block}
+@font-face{font-family:'FZ Round';src:url('assets/fonts/FZZYJT.woff') format('woff');font-display:block}
+@font-face{font-family:'FZ Round Bold';src:url('assets/fonts/cuyuan.woff') format('woff');font-display:block}
+:root{--scale:1;--ink:#28584e;--deep:#185448;--mint:#6ab593;--cream:#fff9e9;--orange:#ed9350;--line:#dfbf81;--title:68px;--instruction:52px;--word:76px;--option:60px;--button:40px;--feedback:44px;--progress:44px}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#000;overscroll-behavior:none}
+body{font:44px/1.15 'Heinemann Roman',sans-serif;color:var(--ink)}
+button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation;-webkit-appearance:none;appearance:none}
+button:focus-visible{outline:6px solid #1264a3;outline-offset:6px}
+button:disabled{cursor:default;opacity:.43}
+button strong,b,strong,h1,h2,h3{font-family:'Heinemann Bold',sans-serif;font-weight:400}
+button span{pointer-events:none}
+#stage{width:1920px;height:1080px;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(var(--scale));transform-origin:center;overflow:hidden;isolation:isolate;user-select:none;touch-action:none;background:#f9f0d7}
+#background,#scene-video{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;pointer-events:none}
+#scene-video{display:none;z-index:1;background:transparent}
+#scene-video.visible{display:block}
+#screen{position:absolute;inset:0;z-index:2}
+#toolbar{position:absolute;inset:0;z-index:6;pointer-events:none}
+#toolbar button{pointer-events:auto}
+.icon{width:48px;height:48px;flex:none;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+.icon-btn{width:96px;height:96px;padding:18px;border:3px solid #d3b77f;border-radius:29px;display:inline-flex;align-items:center;justify-content:center;background:#fff9e9;box-shadow:0 6px 0 #bea071,0 12px 18px #725c2b22;flex:none}
+.icon-btn .icon{width:56px;height:56px}
+.icon-btn.core{width:112px;height:112px;border-radius:32px}
+.icon-btn.core .icon{width:66px;height:66px}
+.icon-btn:active,.btn:active{transform:translateY(4px);box-shadow:0 2px 0 #a48452}
+.icon-btn.home{position:absolute;left:48px;top:44px}
+.icon-btn.sound{position:absolute;right:48px;top:44px}
+.icon-btn.pause{position:absolute;right:168px;top:44px}
+.btn{height:96px;min-width:240px;max-width:280px;display:inline-flex;align-items:center;justify-content:center;gap:16px;padding:0 26px;border:3px solid #bcdfc0;border-radius:28px;background:linear-gradient(#5aab86,#348563);box-shadow:0 7px 0 #236d52,0 13px 20px #19342c25;color:#fffdf3;font-family:'Heinemann Bold',sans-serif;font-size:var(--button);line-height:1;white-space:nowrap;text-wrap:nowrap;flex:none}
+.btn.secondary{background:linear-gradient(#fffdf2,#f8e8bb);border-color:#e5c987;color:#426151;box-shadow:0 7px 0 #cbb17b,0 13px 20px #19342c18}
+.btn .icon{width:44px;height:44px}
+.btn span{white-space:nowrap}
+.title{position:absolute;left:190px;top:57px;max-width:1120px;margin:0;font-size:var(--title);line-height:1.12;color:#275b4d;text-shadow:0 3px 0 #fff6df}
+.kicker{font-size:32px;letter-spacing:2px;text-transform:uppercase;color:#578576;font-family:'Heinemann Bold',sans-serif}
+.hero-copy{position:absolute;left:114px;top:252px;width:710px}
+.hero-title{font-size:80px;line-height:1.09;margin:28px 0;color:#245747;max-width:710px;text-shadow:0 4px 0 #fffaed}
+.hero-sub{font-size:46px;line-height:1.25;margin:28px 0 44px;max-width:690px}
+.hero-copy .btn{min-width:260px}
+.panel{position:absolute;left:96px;top:218px;width:1064px;height:650px;border:4px solid #e4c28a;border-radius:42px;background:linear-gradient(150deg,#fffdf4fa,#fff8e9f7);box-shadow:0 10px 0 #bc93553b,0 20px 30px #70552314;padding:32px 36px}
+.panel::before{content:'';position:absolute;inset:9px;border:2px solid #f0dec0;border-radius:32px;pointer-events:none}
+.instruction{font-size:var(--instruction);line-height:1.15;margin:0;text-align:center;font-family:'Heinemann Bold',sans-serif}
+.hint{font-size:38px;line-height:1.15;text-align:center;margin:14px 0;color:#6a7e6d}
+.feedback{position:absolute;bottom:23px;left:28px;right:28px;min-height:55px;display:flex;gap:12px;align-items:center;justify-content:center;text-align:center;font-size:var(--feedback);line-height:1.1;color:#447357}
+.feedback.retry{color:#aa5c32}
+.feedback .icon{width:48px;height:48px}
+.footer{position:absolute;left:48px;right:48px;bottom:48px;display:flex;align-items:center;justify-content:space-between;gap:24px;height:112px}
+.footer-side{display:flex;align-items:center;gap:24px}
+.progress{font-family:'FZ Round Bold',sans-serif;font-size:var(--progress);line-height:1;white-space:nowrap;color:#fffdf0;padding:15px 24px;border-radius:20px;background:#32684fe8;min-width:146px;text-align:center}
+.progress .english{font-family:'Heinemann Roman',sans-serif;margin-right:18px}
+.section-progress{position:absolute;right:308px;top:66px;font-size:36px;color:#4c715a;display:flex;gap:12px;align-items:center}
+.dot{height:16px;width:16px;border:3px solid #d0ad75;border-radius:50%;background:#fff9e9}
+.dot.active{background:#609e7c;border-color:#397c59}
+.food{width:100%;height:100%;object-fit:contain;pointer-events:none;filter:drop-shadow(0 8px 5px #6c4c1518)}
+.food-group{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;width:100%;height:100%;gap:0}
+.food-group[data-count='1'] .food{width:82%;height:92%}
+.food-group[data-count='2'] .food{width:49%;height:82%}
+.food-group[data-count='3'] .food{width:33%;height:75%}
+.food-group[data-count='4'] .food{width:45%;height:48%}
+.dish{border-radius:50%;background:radial-gradient(ellipse at 50% 45%,#fffefa 0 56%,#f3e5cb 57% 66%,#fffdf4 67% 76%,#e5cda5 77% 79%,transparent 80%);padding:22px;border:0}
+.word{font-family:'Heinemann Bold',sans-serif;font-size:var(--word);line-height:1.05;color:#2d6455;white-space:nowrap}
+.plural{color:#d56f30}
+.discover-grid{position:absolute;left:38px;right:38px;top:158px;height:388px;display:flex;gap:20px}
+.discover-card{flex:1;min-width:0;position:relative;border:0;background:transparent;display:flex;align-items:center;flex-direction:column;padding:0}
+.discover-card .dish{width:100%;height:278px;position:relative;display:flex;align-items:center;justify-content:center}
+.discover-card .food{width:220px;height:240px;animation:pop .45s both}
+.discover-card .word{margin-top:20px}
+.lid{position:absolute;width:248px;height:174px;left:50%;top:56px;transform:translateX(-50%);border-radius:150px 150px 17px 17px;border:4px solid #d5bf91;background:radial-gradient(ellipse at 35% 30%,#fffef4 3%,#f9ebc9 43%,#d4b977 100%);box-shadow:inset -12px -8px 20px #b58b4b24,0 12px 9px #997b4922;pointer-events:none}
+.lid::before{content:'';position:absolute;left:101px;top:-32px;width:40px;height:31px;background:linear-gradient(90deg,#bf914b,#fff7c5,#a77738);border:3px solid #c8a26b;border-radius:15px 15px 6px 6px}
+.lid::after{content:'';position:absolute;left:-14px;bottom:-14px;width:269px;height:20px;background:linear-gradient(#fff8e1,#cdb782);border:2px solid #c8af7c;border-radius:12px}
+.closed .lid{animation:lidwiggle 2.8s infinite}
+.clue{font-size:48px;color:#b08246;margin-top:24px}
+.count-stage{position:absolute;left:44px;right:44px;top:134px;height:366px}
+.count-dish{position:absolute;left:164px;top:0;width:650px;height:216px}
+.count-word{position:absolute;left:100px;right:100px;top:229px;text-align:center;display:flex;align-items:center;justify-content:center;gap:28px}
+.count-controls{position:absolute;left:44px;right:44px;bottom:89px;display:flex;align-items:center;justify-content:center;gap:28px;height:106px}
+.count-controls .btn{height:96px}
+.count-stage .new-food{animation:pop .35s both}
+.egg-source{height:156px;width:148px;position:absolute;left:0;top:68px;background:#fff8e8;border:3px dashed #c5ac79;border-radius:28px;padding:12px;touch-action:none;z-index:3}
+.egg-source .food{height:100%;width:100%;pointer-events:none}
+.egg-source.dragging{box-shadow:0 12px 24px #735a3b42;background:#fff8e888}
+.drop-hint{border:4px dashed #73a787;border-radius:42px;background:#dfedca55}
+.count-dish.basket{border:5px solid #c39b65;border-bottom-width:18px;border-radius:38px 38px 80px 80px;background:repeating-linear-gradient(0deg,#d6b17a 0 12px,#e7c799 12px 18px);box-shadow:inset 0 18px 20px #b58a5066;padding:14px 28px}
+.count-dish.basket::before{content:'';position:absolute;inset:15px;border-radius:20px 20px 52px 52px;background:#fff7e5;z-index:0}
+.count-dish.basket .food-group{position:relative;z-index:1}
+.round-caption{position:absolute;left:160px;right:160px;top:129px;text-align:center;font-size:46px}
+.choices{display:flex;gap:24px;position:absolute;left:36px;right:36px;top:245px;height:278px}
+.choice{flex:1;min-width:0;height:278px;border:4px solid #e1c997;border-radius:32px;background:#fffdf3;box-shadow:0 8px 0 #dfc89488;position:relative;padding:18px;transition:transform .16s,border-color .16s}
+.choice:hover:not(:disabled):not(.wrong):not(.correct){border-color:#bca372}
+.choice.selected,.choice.correct{border-color:#4e976c;background:#edf7df}
+.choice.wrong{border-color:#d69671;background:#fff2e7;animation:shake .3s}
+.choice .food-group{height:218px}
+.choice .tick{position:absolute;top:-22px;right:8px;background:#43805a;color:#fff;border-radius:50%;width:60px;height:60px;display:flex;align-items:center;justify-content:center}
+.check-choices{top:245px;height:270px;left:154px;right:154px}
+.check-choices .choice{height:270px}
+.listen-position{position:absolute;top:105px;left:50%;transform:translateX(-50%);display:flex;gap:18px;align-items:center}
+.sound-help{position:absolute;left:36px;right:36px;top:158px;font-size:42px;text-align:center;color:#995d39}
+.fallback-word{left:644px;right:auto;top:126px;width:350px;text-align:left;font:64px/1 'Heinemann Bold',sans-serif;color:#9b663d}
+.label-food{position:absolute;left:240px;top:124px;width:504px;height:258px}
+.label-options{position:absolute;left:128px;right:128px;top:422px;height:105px;display:flex;gap:38px}
+.label-choice{position:relative;flex:1;height:105px;border:4px solid #ddc18a;border-radius:26px;background:#fffdf1;box-shadow:0 7px 0 #d6bc88;font-size:68px;font-family:'Heinemann Bold',sans-serif;display:flex;align-items:center;justify-content:center;white-space:nowrap}
+.label-choice.selected{border-color:#56976b;background:#eaf4db;box-shadow:0 7px 0 #80a97a}
+.label-choice .icon{width:38px;height:38px;margin-left:20px}
+.story-title{position:absolute;top:56px;left:190px;right:370px;margin:0;font-size:68px;text-shadow:0 4px 0 #fff7df}
+.story-caption{position:absolute;left:90px;right:90px;bottom:208px;min-height:95px;background:#fff9edea;border:3px solid #e2c78f;border-radius:30px;padding:22px 38px;font-family:'Heinemann Bold',sans-serif;font-size:52px;line-height:1.13;text-align:center;box-shadow:0 7px 0 #a5824938}
+.invite-caption{position:absolute;left:100px;top:310px;width:1030px;min-height:185px;border-radius:36px;background:#fffaf0eb;border:4px solid #e4c590;padding:38px;text-align:center;font-size:58px;line-height:1.2;font-family:'Heinemann Bold',sans-serif}
+.video-progress{height:8px;position:absolute;left:96px;right:96px;bottom:184px;background:#fff8db80;border-radius:8px;overflow:hidden}
+.video-progress>span{display:block;width:0;height:100%;background:#4b9978;transition:width .15s}
+.summary-grid{position:absolute;left:32px;right:32px;top:117px;bottom:35px;display:flex;gap:18px}
+.summary-column{flex:1;border:3px solid #e4d0a6;border-radius:26px;background:#fffdf3;display:flex;flex-direction:column;overflow:hidden}
+.summary-word{flex:1;border:0;background:transparent;min-height:215px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px;gap:8px}
+.summary-word+.summary-word{border-top:3px dashed #dcc899}
+.summary-word .food-group{height:144px}
+.summary-word .word{font-size:66px}
+.summary-word .food-group[data-count='1'] .food{width:140px;height:140px}
+.summary-word .food-group[data-count='3'] .food{width:32%;height:112px}
+.done-copy{position:absolute;left:110px;top:250px;width:850px;text-align:center;padding:45px;background:#fff9ede8;border:4px solid #e5c797;border-radius:42px}
+.done-copy h2{font-size:78px;margin:10px 0 26px}
+.done-copy p{font-size:48px;margin:20px 0 42px}
+#modal{position:absolute;inset:0;z-index:20;pointer-events:none}
+.modal-shade{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#18372d80;pointer-events:auto}
+.modal-card{width:860px;min-height:380px;padding:46px;background:#fffaed;border:5px solid #dfbd82;border-radius:40px;text-align:center;box-shadow:0 22px 50px #15372755}
+.modal-card h2{font-size:64px;margin:0 0 30px}
+.modal-card p{font-size:44px;line-height:1.25;margin:0 0 40px}
+.modal-actions{display:flex;justify-content:center;gap:30px}
+.entered{animation:enter .32s both}
+.listen-active{box-shadow:0 6px 0 #a6b16d,0 0 0 10px #bfd89d88}
+@keyframes pop{from{opacity:0;transform:translateY(-24px) scale(.86)}to{opacity:1;transform:none}}
+@keyframes shake{25%{transform:translateX(-9px)}75%{transform:translateX(9px)}}
+@keyframes enter{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes lidwiggle{0%,75%,100%{transform:translateX(-50%) rotate(0)}80%{transform:translateX(-50%) rotate(-3deg)}86%{transform:translateX(-50%) rotate(3deg)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.choice.hint-choice{border:5px dashed #bc8b3f;background:#fff5d7}
+.count-word .word{animation:wordin .18s .32s both}
+@keyframes wordin{from{opacity:0}to{opacity:1}}
+
+.choice:disabled,.label-choice:disabled{opacity:1}
+
+/* V2: generated ceramic, enamel, maple and linen assets form the H5 layer. */
+:root{--ink:#294f58;--deep:#244d58;--orange:#de7246;--mint:#419998}
+.btn,.btn.secondary{position:relative;isolation:isolate;border:0;border-radius:28px;background:transparent;box-shadow:none;min-width:260px;width:280px;max-width:280px;padding:0 20px;color:#fffdf6;text-shadow:0 2px 2px #76382666;gap:13px;transition:filter .18s,transform .18s}
+.btn::before{content:'';position:absolute;inset:0;z-index:-1;background:url('assets/images/ui-v2/button-coral.webp') center/103% 135% no-repeat;filter:drop-shadow(0 6px 5px #50381d2b);pointer-events:none}
+.btn.secondary::before{background-image:url('assets/images/ui-v2/button-mint.webp');background-size:103% 143%}
+.btn.secondary{text-shadow:0 2px 2px #16485266}
+.btn:disabled{opacity:1;filter:saturate(.24) brightness(1.12);color:#ffffffd6}
+.btn:not(:disabled):hover{filter:brightness(1.06)}
+.btn:not(:disabled):active{transform:translateY(4px);box-shadow:none;filter:brightness(.98)}
+.btn .icon{filter:drop-shadow(0 2px 1px #713b2b50);stroke-width:2.7}
+.icon-btn,.icon-btn.core{position:relative;isolation:isolate;padding:18px;border:0;background:none;box-shadow:none;color:#2b6470;transition:transform .16s,filter .16s}
+.icon-btn::before{content:'';position:absolute;inset:0;z-index:-1;background:url('assets/images/ui-v2/icon-base.webp') center/111% 111% no-repeat;pointer-events:none;filter:drop-shadow(0 4px 3px #24433f28)}
+.icon-btn .icon{width:54px;height:54px;stroke-width:2.8;filter:drop-shadow(0 1px 0 #ffffff)}
+.icon-btn.core .icon{width:64px;height:64px}
+.icon-btn:not(:disabled):hover{filter:brightness(1.05)}
+.icon-btn:active{transform:translateY(3px);box-shadow:none}
+.title,.story-title{color:#285660;text-shadow:0 3px 0 #fff8e9,0 6px 10px #62461c19}
+.kicker{color:#2f7d85;letter-spacing:1px}
+.hero-title{color:#265763}
+.hero-sub{color:#477174}
+.hero-copy .btn{width:280px}
+.panel{border:0;background: url('assets/images/ui-v2/task-board.webp') center/100% 100% no-repeat;box-shadow:none;border-radius:38px;padding:43px 46px;filter:drop-shadow(0 12px 8px #61461b29)}
+.panel::before{display:none}
+.instruction{color:#315968}
+.hint{color:#6d8083;margin-top:9px}
+.feedback{bottom:35px;min-height:56px;left:46px;right:46px;font-size:42px;color:#327d72;gap:14px}
+.feedback:not(:empty){width:max-content;max-width:calc(100% - 92px);left:50%;right:auto;transform:translateX(-50%);padding:6px 22px;border-radius:20px;background:#e0eee6;box-shadow:inset 0 1px 0 #fff,0 2px 0 #759e8524}
+.feedback.retry{color:#a65439;background:#ffeadb}
+.feedback .icon{width:42px;height:42px}
+.progress{background:#fff6e5;color:#456572;border:2px solid #c6dacd;border-radius:22px;padding:14px 24px;box-shadow:inset 0 2px 2px #fff,0 5px 0 #536a5140}
+.dot{border-color:#aacac0;background:#fff8e8;box-shadow:0 2px 2px #b0a07a55}
+.dot.active{background:#ed9974;border-color:#cd7c54}
+.dish{background:url('assets/images/ui-v2/plate.webp') center/100% 100% no-repeat;border-radius:0;border:0;padding:18px 34px}
+.food{filter:drop-shadow(0 8px 5px #674b2530)}
+.word{color:#285c65}
+.plural{color:#d66643}
+.discover-grid{left:49px;right:49px;top:162px;height:378px;gap:24px}
+.discover-card{border-radius:30px;transition:transform .2s,filter .2s}
+.discover-card:disabled{opacity:.67;filter:saturate(.55)}
+.discover-card .dish{height:263px;width:100%;padding:0;background-size:100% 64%;background-position:50% 89%}
+.discover-card.closed .dish{background:none}
+.discover-card .food{width:205px;height:222px;margin-top:-12px}
+.discover-card .word,.clue{margin-top:18px;min-width:244px;line-height:1.08;text-align:center;border-radius:21px;padding:3px 12px 5px;background:#e6f0e9;box-shadow:inset 0 2px 1px #fff,0 3px 0 #638f7525;font-size:72px}
+.discover-card:nth-child(1) .word,.discover-card:nth-child(1) .clue{background:#fce4d6;color:#925435}
+.discover-card:nth-child(2) .word,.discover-card:nth-child(2) .clue{background:#dfeef0;color:#365e76}
+.discover-card:nth-child(3) .word,.discover-card:nth-child(3) .clue{background:#e4eedc;color:#55704a}
+.clue{font-size:54px;line-height:1.1;width:104px;min-width:104px;height:70px;padding:3px}
+.lid{width:292px;height:246px;left:50%;top:0;border:0;border-radius:0;background:url('assets/images/ui-v2/cloche.webp') center/100% 100% no-repeat;box-shadow:none}
+.lid::before,.lid::after{display:none}
+.closed .lid{animation:lidwiggle 3.8s infinite}
+.count-stage{top:139px}
+.count-dish{top:0;height:218px;padding:0 55px 25px}
+.count-word{top:223px}
+.count-word .word{background:#e3efed;border-radius:23px;min-width:280px;padding:2px 28px 5px;box-shadow:inset 0 2px 1px #fff,0 3px 0 #779f9620}
+#stage[data-scene='S04'] .count-word .word{background:#fce3d3;color:#875038}
+#stage[data-scene='S05'] .count-word .word{background:#dfedf2;color:#3d637b}
+#stage[data-scene='S06'] .count-word .word{background:#e5eecf;color:#5d7343}
+.count-controls{bottom:105px;height:96px}
+.count-dish.basket{border:0;border-radius:0;box-shadow:none;background:url('assets/images/ui-v2/basket.webp') center/100% 100% no-repeat;padding:0 70px 45px}
+.count-dish.basket::before{display:none}
+.egg-source{background:#e3eff1;border:2px dashed #8eb9be;box-shadow:inset 0 2px 0 #fff,0 5px 0 #72969b22;border-radius:26px;padding:12px;top:28px}
+.drop-hint{outline:4px dashed #529e9d;outline-offset:7px;border-radius:40px}
+.choice{border:3px solid #c6d8d3;border-radius:32px;background:linear-gradient(145deg,#f7fcf8,#dfebe5);box-shadow:inset 0 3px 2px #fff,0 6px 0 #9bab9755;padding:16px;isolation:isolate}
+.choice:nth-child(2){background:linear-gradient(145deg,#fffaf4,#f4e8d5);border-color:#e3cbaa}
+.choice:nth-child(3){background:linear-gradient(145deg,#f8fcff,#deebf0);border-color:#bfd2dc}
+.choice::before{content:'';position:absolute;left:15px;right:15px;top:86px;bottom:26px;z-index:-1;background:url('assets/images/ui-v2/plate.webp') center/100% 100% no-repeat;pointer-events:none}
+.choice .food-group{height:200px;position:relative;top:-5px}
+.choice .food-group[data-count='1'] .food{width:78%;height:86%}
+.choice.correct,.choice.correct:nth-child(n){border-color:#3e957c;background:#e2f3dc;box-shadow:inset 0 3px 1px #fff,0 6px 0 #548c6c55}
+.choice.wrong,.choice.wrong:nth-child(n){border-color:#d78460;background:#fde6dc;box-shadow:inset 0 2px 1px #fff,0 6px 0 #b3775650}
+.choice.hint-choice{outline:5px dashed #c99a44;outline-offset:5px}
+.choice .tick{background:#36866f;border:3px solid #f4f8de;box-shadow:0 4px 5px #3b745035}
+.label-food{top:117px;height:273px;padding:10px 64px 30px}
+.label-choice{isolation:isolate;border:0;background:none;box-shadow:none;color:#315c68;font-size:66px}
+.label-choice::before{content:'';position:absolute;inset:-6px -8px;z-index:-1;background:url('assets/images/ui-v2/task-board.webp') center/100% 100% no-repeat;pointer-events:none;filter:drop-shadow(0 4px 3px #73573220)}
+.label-choice.selected{background:none;box-shadow:none;color:#c0603e}
+.label-choice.selected::before{filter:drop-shadow(0 0 5px #e08b58) drop-shadow(0 4px 3px #73573220)}
+.label-choice .icon{margin-left:18px;color:#438b91}
+.summary-grid{left:51px;right:51px;top:124px;bottom:48px;gap:22px}
+.summary-column{border:2px solid #debf9f;background:linear-gradient(150deg,#ffeddf,#f9f1e6);border-radius:26px;box-shadow:inset 0 2px 0 #fff,0 4px 0 #74543419}
+.summary-column:nth-child(2){background:linear-gradient(150deg,#e2f0f4,#f0f5ef);border-color:#b4cdd3}
+.summary-column:nth-child(3){background:linear-gradient(150deg,#e9f1d7,#f4f5e6);border-color:#c4d2a6}
+.summary-word{position:relative;isolation:isolate;min-height:0}
+.summary-word::before{content:'';position:absolute;top:24px;left:18px;right:18px;height:127px;z-index:-1;background:url('assets/images/ui-v2/plate.webp') center/100% 100% no-repeat}
+.summary-word+.summary-word{border-color:#c9bba069}
+.summary-word .word{font-size:64px}
+.summary-word .food-group{height:138px;transform:translateY(-6px)}
+.summary-word .food-group[data-count='3'] .food{height:100px}
+.summary-word .food-group[data-count='1'] .food{height:126px;width:126px}
+.done-copy,.modal-card{border:0;box-shadow:none;background:url('assets/images/ui-v2/task-board.webp') center/100% 100% no-repeat;padding:55px;filter:drop-shadow(0 12px 12px #38472330)}
+.modal-card{padding:52px 60px 60px}
+.invite-caption{border:0;background:url('assets/images/ui-v2/task-board.webp') center/100% 100% no-repeat;padding:42px;color:#325e67;box-shadow:none}
+.story-caption{border-color:#bfddd2;background:#fff9eff2;color:#325e67;box-shadow:0 6px 0 #447e7040}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* Match the generated board's transparent margin and physical rim to content. */
+.panel{background-size:100% 112%}
+.choices{left:60px;right:60px}
+.check-choices{left:154px;right:154px}
+.summary-grid{left:63px;right:63px}
+.label-choice::before{inset:0}
+.count-word{top:213px}
+.count-word .word{padding:0 24px;line-height:1.05}
+#toolbar .icon-btn{position:absolute}
+
+/* V3 classroom review: optical typography, shared navigation, physical content bounds. */
+.ink{display:inline-block;position:relative;transform:translateY(var(--ink-shift,0px));line-height:inherit;pointer-events:none}
+#toolbar .icon-btn,#toolbar .icon-btn.core,.footer .icon-btn{width:96px;height:96px}
+#toolbar .icon-btn .icon,#toolbar .icon-btn.core .icon{width:54px;height:54px}
+.btn{gap:16px;line-height:1.35}
+.btn[data-action='next'],.btn[data-action='skip']{flex-direction:row-reverse}
+.cover-start{position:absolute;inset:0;width:100%;height:100%;border:0;background:transparent;padding:0;cursor:pointer}
+#stage[data-scene='S00'] #toolbar{display:none}
+.title,.story-title{left:480px;right:auto;top:36px;width:960px;height:124px;max-width:none;display:flex;align-items:center;justify-content:center;text-align:center;font-size:60px;line-height:1.4;text-shadow:0 2px 0 #fffaf1;margin:0;background:url('assets/images/ui-v2/task-board.webp') center/100% 115% no-repeat;padding:12px 60px;filter:drop-shadow(0 5px 5px #3e514321)}
+.section-progress{display:none}
+.video-footer{position:absolute;left:48px;right:48px;bottom:48px;height:112px;display:flex;align-items:center;gap:28px}
+.caption-track{height:112px;flex:1;min-width:0;border:2px solid #c9d9c9;border-radius:28px;background:#fffaf0f5;box-shadow:inset 0 3px 1px #fff,0 4px 0 #52796630;padding:0 28px;position:relative;overflow:hidden}
+#caption{height:98px;display:flex;align-items:center;justify-content:center;text-align:center;font:46px/1.4 'Heinemann Bold';color:#325e67;white-space:nowrap}
+.video-progress{left:28px;right:28px;bottom:13px;height:5px;background:#dce6dd}
+.video-progress>span{background:#439b96}
+.panel{top:248px;height:646px;padding:52px 70px;background-size:100% 108%}
+.instruction{height:76px;font-size:50px;line-height:1.4;display:flex;align-items:center;justify-content:center;white-space:nowrap}
+.hint{height:54px;line-height:1.4;margin:0;display:flex;align-items:center;justify-content:center;font-size:38px}
+#screen>.progress{position:absolute;top:178px;left:538px;width:180px;min-width:0;height:64px;padding:0 16px;display:flex;align-items:center;justify-content:center;line-height:1.4;font-size:38px;box-shadow:inset 0 2px 0 #fff,0 3px 0 #61736128}
+#stage[data-scene='S07'] #screen>.progress{left:488px;width:280px}
+.discover-grid{left:80px;right:80px;top:192px;height:334px;gap:32px}
+.discover-card .dish{height:220px;flex:none;width:100%;background-size:96% 66%;background-position:50% 85%}
+.discover-card .food{width:176px;height:190px;margin-top:-6px}
+.discover-card .word,.clue{height:92px;min-height:92px;width:250px;min-width:0;max-width:100%;margin-top:16px;padding:0 16px;line-height:1.4;font-size:66px;display:flex;align-items:center;justify-content:center}
+.clue{font-size:50px;width:104px}
+.lid{width:268px;height:222px}
+.feedback{bottom:32px;min-height:64px;line-height:1.4}
+.count-stage{left:64px;right:64px;top:156px;height:350px}
+.count-dish{left:158px;top:0;width:620px;height:214px;padding:0 58px 30px}
+.count-word{left:80px;right:80px;top:226px;height:112px;gap:0}
+.count-word .word{min-width:340px;max-width:100%;height:112px;padding:0 30px;font-size:72px;line-height:1.4;display:flex;align-items:center;justify-content:center;animation:none}
+.count-controls{bottom:34px;height:96px}
+.panel:has(.count-stage)>.feedback{display:none}
+.egg-source{left:25px;top:20px;width:144px;height:156px;padding:14px}
+.count-dish.basket{left:210px;top:0;width:650px;height:224px;padding:0 76px 60px;isolation:isolate}
+.count-dish.basket .food-group{height:170px;align-items:flex-end;flex-wrap:nowrap;z-index:1}
+.count-dish.basket .food{width:135px;height:166px;flex:none;max-width:32%;margin:0 3px}
+.count-dish.basket::after{content:'';position:absolute;inset:0;background:url('assets/images/ui-v2/basket.webp') center/100% 100% no-repeat;z-index:2;pointer-events:none;clip-path:polygon(0 35%,10% 44%,20% 53%,30% 59%,40% 63%,50% 64%,60% 63%,70% 59%,80% 53%,90% 44%,100% 35%,100% 100%,0 100%)}
+.choices{top:272px;height:252px;left:72px;right:72px;gap:28px}
+.choice,.check-choices .choice{height:252px}
+.check-choices{left:166px;right:166px}
+.listen-position{top:140px}
+.fallback-word{top:156px}
+.label-food{top:150px;left:242px;width:580px;height:224px;padding:0 76px 22px}
+.label-options{top:398px;left:126px;right:126px;height:116px;gap:34px}
+.label-choice{height:116px;line-height:1.4;font-size:64px}
+.summary-grid{left:84px;right:84px;top:152px;bottom:66px;gap:26px}
+.summary-column{min-width:0}
+.summary-word{height:50%;flex:1;padding:10px 14px 12px;gap:0;justify-content:center}
+.summary-word .word{height:88px;line-height:1.4;display:flex;align-items:center;justify-content:center;font-size:60px;flex:none}
+.summary-word .food-group{height:110px;flex:none;transform:none;flex-wrap:nowrap}
+.summary-word::before{top:28px;height:98px;left:14px;right:14px}
+.summary-word .food-group[data-count='1'] .food{height:112px;width:112px}
+.summary-word .food-group[data-count='3'] .food{height:88px;width:32%}
+.ending-retry{position:absolute;left:820px;bottom:48px;width:280px}
+#stage[data-done='true'] #toolbar{display:none}
+/* The ink span has a compact line box; measured glyphs stay centered inside padded containers. */
+.ink{line-height:.7}
+.discover-grid{top:184px;height:324px}
+.discover-card .word,.clue{height:88px;min-height:88px}
+.feedback{bottom:68px}
+.count-dish{height:180px}
+.count-dish.basket{height:200px}
+.count-dish.basket .food-group{height:150px}
+.count-dish.basket .food{height:150px}
+.count-word{top:204px;height:100px}
+.count-word .word{height:100px}
+.count-controls{bottom:76px}
+.summary-grid{bottom:94px}
+/* Illustrated stage layers: actual transparent characters and typography, not a moving screenshot. */
+.scene-art,.scene-art>div{position:absolute;inset:0;pointer-events:none}
+.scene-art img{position:absolute;width:100%;height:100%;inset:0;object-fit:fill;pointer-events:none}
+.scene-art .art-title{z-index:3}
+.cover-art .art-title{animation:sign-arrive 1.05s cubic-bezier(.18,.85,.25,1.15) both;transform-origin:30% 38%}
+.cover-art .art-title img{animation:sign-breathe 5.5s 1.2s ease-in-out infinite;transform-origin:30% 35%}
+.cover-art .art-hero{z-index:2;animation:chef-arrive 1.1s .18s cubic-bezier(.18,.85,.25,1.1) both;transform-origin:72% 90%}
+.cover-art .art-hero img{animation:chef-breathe 4s 1.4s ease-in-out infinite;transform-origin:72% 89%}
+.cover-start{z-index:10}
+.cover-start:focus-visible{outline-offset:-12px}
+.cover-leaving .scene-art{transition:filter .4s;filter:brightness(1.12)}
+.cover-leaving .art-title{animation:sign-depart .42s ease-in both}
+.ending-art .art-actors{z-index:2;animation:picnic-arrive 1.1s cubic-bezier(.16,.7,.24,1) both}
+.ending-art .art-actors img{transform:translate(var(--pointer-x,0px),0);transition:transform .7s ease-out}
+.ending-art .art-title{animation:reward-arrive .95s .5s cubic-bezier(.18,.9,.28,1.12) both;transform-origin:50% 17%}
+.ending-art .art-title img{animation:reward-glow 4s 1.8s ease-in-out infinite;transform-origin:50% 17%}
+.ending-retry{z-index:8;animation:enter .6s 1.2s both}
+.sparkles{z-index:4}
+.sparkles i{position:absolute;left:var(--x);top:var(--y);width:14px;height:14px;background:#fff7c9;clip-path:polygon(50% 0,62% 37%,100% 50%,62% 63%,50% 100%,38% 63%,0 50%,38% 37%);animation:sparkle-drift 4.5s var(--delay) ease-in-out infinite;opacity:0;filter:drop-shadow(0 0 8px #ffedbc)}
+.celebration{z-index:5;overflow:hidden}
+.celebration i{position:absolute;top:-40px;left:var(--x);width:13px;height:24px;border-radius:4px;background:var(--color);animation:confetti-fall 3.8s var(--delay) ease-in both}
+@keyframes sign-arrive{from{opacity:0;transform:translateY(-70px) rotate(-3deg) scale(.92)}65%{opacity:1;transform:translateY(7px) rotate(.7deg) scale(1.015)}to{opacity:1;transform:none}}
+@keyframes chef-arrive{from{opacity:0;transform:translate(140px,30px) rotate(4deg)}65%{opacity:1;transform:translate(-10px,-7px) rotate(-1deg)}to{opacity:1;transform:none}}
+@keyframes sign-breathe{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes chef-breathe{0%,100%{transform:translate(var(--pointer-x,0px),0) rotate(-.3deg)}50%{transform:translate(var(--pointer-x,0px),-5px) rotate(.45deg)}}
+@keyframes sign-depart{to{opacity:0;transform:translateY(-25px) scale(1.025)}}
+@keyframes picnic-arrive{from{opacity:0;transform:translateY(70px)}to{opacity:1;transform:none}}
+@keyframes reward-arrive{from{opacity:0;transform:translateY(-80px) scale(.72)}65%{opacity:1;transform:translateY(8px) scale(1.025)}to{opacity:1;transform:none}}
+@keyframes reward-glow{0%,100%{filter:drop-shadow(0 5px 5px #d4934330)}50%{filter:drop-shadow(0 7px 12px #fff6bb90)}}
+@keyframes sparkle-drift{0%,100%{opacity:0;transform:translateY(10px) scale(.5)}45%,60%{opacity:.8;transform:translateY(-12px) scale(1)}}
+@keyframes confetti-fall{0%{opacity:0;transform:translate(0,-20px) rotate(0)}10%{opacity:1}85%{opacity:.8}100%{opacity:0;transform:translate(var(--drift),1150px) rotate(580deg)}}
+@media(prefers-reduced-motion:reduce){.scene-art *,.ending-retry{animation:none!important;transition:none!important;transform:none!important}.sparkles,.celebration{display:none}.cover-leaving .scene-art{filter:none}}
+.cover-art .art-title img{left:120px;top:54px;width:970px;height:752px;object-fit:contain;transform-origin:center}
+.scene-art .cover-prompt{inset:auto;left:750px;bottom:54px;width:420px;height:96px;display:flex;align-items:center;justify-content:center;background:url('assets/images/ui-v2/task-board.webp') center/100% 118% no-repeat;font:40px/1.4 'Heinemann Bold';color:#315e64;z-index:5;animation:prompt-in 1s .9s both}
+.ending-art .art-title img{left:335px;top:32px;width:1250px;height:295px;object-fit:contain}
+.ending-art .art-actors img{left:24px;top:320px;width:1872px;height:752px;object-fit:contain;object-position:bottom}
+@keyframes prompt-in{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+/* Retry is available immediately, including during the celebration entrance. */
+.ending-retry{animation:none}
+
+/* V3 experience revision: stable reveals, direct food handling and audible transitions. */
+.btn,.btn.secondary{width:320px;min-width:320px;max-width:360px;padding:0 34px;font-size:40px;gap:18px}
+.btn .icon{width:42px;height:42px;flex:none}
+.modal-actions .btn{width:280px;min-width:260px;font-size:36px}
+.scene-art .cover-prompt{left:790px;bottom:56px;width:340px;height:112px;gap:20px;background:url('assets/images/ui-v2/button-coral.webp') center/100% 135% no-repeat;color:#fffdf5;font:46px/1.3 'Heinemann Bold';text-shadow:0 2px 2px #82422a66;filter:drop-shadow(0 8px 8px #52341645)}
+.cover-prompt .icon{width:44px;height:44px;fill:#fff7e6;stroke-width:1.6}
+#caption{height:108px}
+.caption-track{padding:0 30px}
+.video-progress{display:none}
+.discover-card .dish{background-image:url('assets/images/ui-v2/plate.webp');background-size:96% 66%;background-position:50% 85%}
+.discover-card.closed .dish{background-image:url('assets/images/ui-v2/plate.webp')}
+.discover-card .food{animation:none;opacity:1;transition:opacity .35s .1s,transform .4s}
+.discover-card.closed .food{opacity:0;transform:scale(.9)}
+.discover-card .lid{transform:translateX(-50%);transition:transform .6s cubic-bezier(.22,.8,.32,1),opacity .4s;z-index:2}
+.closed .lid{animation:none}
+.opened .lid{transform:translate(-50%,-110px) rotate(-12deg);opacity:0;pointer-events:none}
+.closed .lid.hint-wiggle{animation:gentle-rattle .7s ease-in-out}
+@keyframes gentle-rattle{0%,100%{transform:translateX(-50%) rotate(0)}22%{transform:translateX(-50%) rotate(-4deg)}45%{transform:translateX(-50%) rotate(4deg)}68%{transform:translateX(-50%) rotate(-2deg)}}
+.feedback{bottom:36px}
+.feedback.success{min-height:80px;padding:8px 28px;background:#fff2c7;color:#287560;box-shadow:inset 0 2px 0 #fff,0 6px 0 #bfa06940,0 10px 24px #a77b3d20;animation:success-arrive .45s cubic-bezier(.2,.8,.3,1.2)}
+@keyframes success-arrive{from{opacity:0;scale:.82}65%{scale:1.05}to{opacity:1;scale:1}}
+.success-burst{position:absolute;left:50%;bottom:74px;width:0;height:0;pointer-events:none;z-index:12}
+.success-burst i{position:absolute;width:20px;height:20px;background:#e7b958;clip-path:polygon(50% 0,62% 35%,100% 40%,71% 63%,80% 100%,50% 79%,20% 100%,29% 63%,0 40%,38% 35%);animation:success-star 1.15s var(--delay) ease-out both}
+@keyframes success-star{from{opacity:0;transform:rotate(var(--angle)) translateX(15px) scale(.3)}18%{opacity:1}to{opacity:0;transform:rotate(var(--angle)) translateX(var(--distance)) rotate(70deg) scale(.8)}}
+.drag-panel .count-stage{top:182px;height:340px;left:64px;right:64px}
+.pantry-zone{position:absolute;left:20px;top:10px;width:220px;height:204px;border:3px dashed #b7c7ae;border-radius:30px;background:#edf0df99;display:flex;justify-content:center;align-items:center}
+.pantry-zone>.icon{width:76px;height:76px;stroke:#6e9b87}
+.tray-label{position:absolute;top:219px;left:-16px;right:-16px;text-align:center;font:34px/1.2 'Heinemann Roman';color:#51736e;white-space:nowrap}
+.food-token{display:flex;align-items:center;justify-content:center;position:relative;flex:none;width:150px;height:168px;padding:0;border:0;background:transparent;touch-action:none;cursor:grab;opacity:1}
+.food-token:disabled{opacity:1;filter:none;cursor:default}
+.food-token:active{cursor:grabbing}
+.food-token.is-held{opacity:.2}
+.food-token .food,.count-dish.basket .food-token .food{width:100%;height:100%;max-width:100%;margin:0;object-fit:contain;animation:none}
+.drag-panel .count-dish,.drag-panel .count-dish.basket{left:340px;top:0;width:530px;height:228px;padding:0 35px 36px}
+.drag-panel .count-dish .food-group{height:186px;align-items:flex-end;flex-wrap:nowrap;gap:4px}
+.drag-panel .count-dish.basket{padding:0 42px 55px}
+.drag-panel .count-dish.basket .food-group{height:168px;z-index:1}
+.drag-panel .count-dish .placed-token{width:140px;height:166px;max-width:32%}
+.drag-panel .count-dish .food-group[data-count='1'] .placed-token{width:166px;max-width:75%}
+.drag-direction{position:absolute;left:259px;top:83px;width:62px;height:58px;color:#63a092}
+.drag-direction .icon{width:58px;height:58px}
+.drag-panel .count-word{left:324px;right:auto;top:252px;width:562px;height:100px;padding:0;border:0;background:none;display:flex;justify-content:center}
+.drag-panel .count-word .word{width:auto;min-width:380px;height:96px;padding:0 25px;gap:20px;font-size:68px}
+.count-word .word .icon{width:34px;height:34px;flex:none;color:#5d8988}
+.food-ghost{position:absolute;width:140px;height:160px;z-index:60;pointer-events:none;filter:drop-shadow(0 20px 12px #4c3e3a44)}
+.food-ghost img{width:100%;height:100%;object-fit:contain}
+.drop-hint{outline:5px dashed #e2a45a;outline-offset:8px}
+[data-drop]:focus-visible{outline:5px solid #e2a45a;outline-offset:8px}
+.review-bridge{position:absolute;left:96px;top:282px;width:1064px;height:548px;padding:55px 70px;background:url('assets/images/ui-v2/task-board.webp') center/100% 108% no-repeat;text-align:center}
+.review-bridge h2{font:52px/1.2 'Heinemann Bold';margin:0}
+.review-bridge p{font:42px/1.2 'Heinemann Roman';margin:20px 0 0}
+.bridge-plates{height:240px;display:flex;gap:26px;align-items:center;justify-content:center}
+.bridge-plates .dish{width:245px;height:170px;flex:none;padding:0 35px 20px;animation:plate-serve .8s cubic-bezier(.2,.8,.25,1.1) both}
+.bridge-plates .dish:nth-child(2){animation-delay:.18s}.bridge-plates .dish:nth-child(3){animation-delay:.36s}
+@keyframes plate-serve{from{opacity:0;transform:translate(80px,20px) scale(.8)}to{opacity:1;transform:none}}
+.review-board{animation:review-board-in .55s cubic-bezier(.2,.8,.3,1) both}
+@keyframes review-board-in{from{opacity:0;transform:translateY(32px) scale(.97)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.lid,.food,.feedback,.review-board,.bridge-plates .dish{animation:none!important;transition:none!important}.success-burst{display:none}}
+
+.discover-card .dish{overflow:hidden}
+
+/* V3 classroom play revision: larger learning surfaces and constant object scale. */
+.drag-panel .count-dish .food-group .food-token .food{width:100%;height:100%;max-width:none;margin:0}
+.drag-panel .count-dish .placed-token,.drag-panel .count-dish .food-group[data-count='1'] .placed-token{width:170px;height:178px;max-width:none}
+.source-token{width:170px;height:178px}
+.food-ghost{width:170px;height:178px}
+.discover-panel{left:66px;top:220px;width:1290px;height:702px;padding-top:48px}
+.discover-panel .instruction{font-size:58px}.discover-panel .hint{font-size:42px}
+.discover-grid{left:88px;right:88px;top:205px;height:405px;gap:34px}
+.discover-card .dish{height:278px}.discover-card .food{width:220px;height:245px}
+.discover-card .lid{width:330px;height:276px}
+.discover-card.closed .dish{background:none}
+.discover-card .word,.discover-card .clue{width:290px;height:108px;min-height:108px;font-size:72px}
+#stage[data-scene='S02'] #screen>.progress{left:622px;top:157px}
+.discover-panel>.feedback{display:none}
+.ending-retry{left:750px;width:420px;bottom:45px}.ending-retry .btn{width:420px;min-width:420px;max-width:420px;height:124px;font-size:52px;gap:24px}
+.ending-retry .icon{width:54px;height:54px}
+.review-board{left:68px;top:214px;width:1312px;height:697px;padding:0;background:none;filter:none}
+.review-board>.instruction{font-size:50px;height:84px;background:url('assets/images/ui-v2/task-board.webp') center/100% 152% no-repeat;margin:0 110px 12px}
+.review-board .summary-grid{left:0;right:0;top:103px;bottom:0;gap:26px}
+.review-board .summary-column{border-width:3px;border-radius:32px;box-shadow:inset 0 3px 2px #fff,0 8px 0 #acb7a34d,0 12px 18px #4c483520}
+.review-board .summary-word{padding:14px 18px;gap:7px}
+.review-board .summary-word .food-group{height:172px}
+.review-board .summary-word::before{height:152px;top:43px;left:20px;right:20px}
+.review-board .summary-word .word{height:92px;font-size:74px}
+.review-board .summary-word .food-group[data-count='1'] .food{width:170px;height:174px}
+.review-board .summary-word .food-group[data-count='3'] .food{width:32%;height:137px}
+.bobo-reaction{position:absolute;right:28px;bottom:148px;width:540px;height:610px;z-index:15;pointer-events:none;isolation:isolate}
+.bobo-reaction.cheer::before{content:'';position:absolute;inset:60px 12px 10px;border-radius:50%;background:radial-gradient(#fff7d3 10%,#fff5dfef 55%,#fff5df00 73%);z-index:-1}
+.bobo-reaction img{width:100%;height:100%;object-fit:contain;transform-origin:50% 85%;animation:bobo-approval 2.4s ease-out both}
+.reward-rays{position:absolute;inset:20px;border-radius:50%;background:repeating-conic-gradient(#f8d17066 0deg 8deg,transparent 8deg 25deg);mask-image:radial-gradient(transparent 20%,#000 52%,transparent 72%);animation:reward-spin 2.4s linear both;z-index:-1}
+.reward-stars{position:absolute;bottom:-2px;left:100px;right:60px;text-align:center;color:#efb842;font-size:74px;text-shadow:0 3px 0 #fff5ce;animation:star-up 2.4s both}
+@keyframes bobo-approval{0%{opacity:0;transform:translateY(110px) scale(.8)}18%{opacity:1;transform:translateY(0) scale(1.05) rotate(-4deg)}35%{transform:scale(1) rotate(3deg)}50%{transform:rotate(-2deg)}65%,85%{opacity:1;transform:none}100%{opacity:0;transform:translateY(30px)}}
+@keyframes reward-spin{to{transform:rotate(40deg)}}@keyframes star-up{0%,10%{opacity:0;transform:translateY(30px) scale(.5)}30%,80%{opacity:1;transform:none}100%{opacity:0}}
+.try-bubble{position:absolute;top:30px;left:15px;right:10px;border:4px solid #e1c897;border-radius:40px;background:#fff5df;box-shadow:0 8px 0 #936b3333;padding:28px 32px;display:flex;align-items:center;gap:20px;font:42px/1.2 'Heinemann Bold';color:#486f6e;animation:enter .25s both}
+.success-burst{left:62%;bottom:250px}
+.kitchen-panel,.lunch-panel{left:64px;top:225px;width:1288px;height:683px}
+.kitchen-panel .instruction,.lunch-panel .instruction{font-size:54px}
+.ingredient-rail{position:absolute;left:70px;top:190px;width:235px;display:flex;flex-direction:column;gap:8px}
+.ingredient{position:relative;width:225px;height:124px;border:3px solid #c9dbcf;border-radius:24px;background:#edf4e8;box-shadow:inset 0 2px 0 white;touch-action:none}
+.ingredient:disabled{opacity:.55}.ingredient>.icon{position:absolute;right:0;bottom:4px;width:35px;height:35px;background:#408e71;color:white;border-radius:50%}
+.burger-part{display:block;width:200px;height:150px;background-image:url('assets/images/play/burger-parts.webp');background-size:300% 100%;background-repeat:no-repeat;pointer-events:none}
+.part-0{background-position:left center}.part-1{background-position:center center}.part-2{background-position:right center}
+.ingredient .burger-part{width:200px;height:117px;margin:auto}
+.burger-build-zone{position:absolute;left:380px;top:190px;width:565px;height:333px;border-radius:50%}
+.build-plate{position:absolute;left:-15px;top:192px;width:585px;height:160px}
+.burger-build-zone .stacked{position:absolute;left:128px;width:310px;height:226px;animation:ingredient-drop .38s ease-out both}
+.layer-0{top:120px;z-index:1}.layer-1{top:52px;z-index:2}.layer-2{top:-25px;z-index:3}
+@keyframes ingredient-drop{from{transform:translateY(-60px);opacity:0}to{transform:none;opacity:1}}
+.stack-target{position:absolute;left:235px;top:190px;color:#6d9d8b}.stack-target .icon{width:88px;height:88px}
+.kitchen-controls{position:absolute;right:60px;bottom:40px}.kitchen-word{position:absolute;left:430px;bottom:34px;height:108px;padding:0 26px;border:0;border-radius:24px;background:#e6eed0;display:flex;align-items:center;gap:20px}
+.kitchen-word .word{font-size:66px}.kitchen-word>.icon{width:35px}
+.finished-burgers{position:absolute;left:375px;top:185px;width:600px;height:325px;pointer-events:none}
+.finished-burgers:not(:empty){background:url('assets/images/ui-v2/plate.webp') center bottom/100% 62% no-repeat}
+.finished-burgers .food-group{flex-wrap:nowrap}
+.finished-burgers .food-group .food{width:240px;height:245px}
+.kitchen-panel:has(.finished-burgers:not(:empty)) .burger-build-zone{visibility:hidden}
+.order-audio{position:absolute;left:343px;right:65px;top:129px;display:flex;align-items:center;gap:26px;font-size:35px;height:108px}
+.pantry-shelf{position:absolute;left:75px;top:173px;display:flex;flex-direction:column;gap:7px}
+.pantry-food{position:relative;width:210px;height:136px;border:3px solid #c0d3bd;border-radius:25px;background:#f4f2df;display:flex;align-items:center;justify-content:center;padding:5px;touch-action:none}
+.pantry-food img{width:130px;height:120px;object-fit:contain;pointer-events:none}
+.pantry-food>span{display:none}
+.order-plate{position:absolute;left:332px;top:291px;width:820px;height:245px;padding:0 42px 40px;transition:transform .65s,opacity .65s}
+.tray-items{display:flex;align-items:center;justify-content:center;height:100%;gap:18px}
+.tray-item{width:178px;height:194px;flex:none;padding:0;border:0;background:none}
+.tray-item img{width:100%;height:100%;object-fit:contain;pointer-events:none}
+.tray-item:disabled{opacity:1}
+.order-plate.served{animation:serve-to-friend .85s ease-in both}
+@keyframes serve-to-friend{0%{transform:none;opacity:1}80%,100%{transform:translate(380px,-60px) scale(.8);opacity:0}}
+.plate-hint{position:absolute;left:0;right:0;top:80px;text-align:center;color:#75998d;font-size:40px}
+.tray-help{position:absolute;left:65px;bottom:23px;width:850px;font-size:27px;margin:0;text-align:center;color:#607d75}
+.serve-bell{position:absolute;right:64px;bottom:45px;width:184px;height:123px;background:url('assets/images/ui-v2/button-coral.webp') center/100% 135% no-repeat;border:0;color:white;display:flex;justify-content:center;align-items:center;gap:10px;font:33px 'Heinemann Bold'}
+.serve-bell>.icon{width:47px;height:47px}.serve-bell:disabled{opacity:.4}
+.lunch-panel>.feedback{bottom:105px;left:370px;transform:none;max-width:650px;font-size:32px}
+.customer-card{position:absolute;right:56px;top:296px;width:425px;height:480px;border:5px solid #e0bd7c;border-radius:45px;background:#fff7e6ee;box-shadow:0 12px 0 #9377533b;text-align:center}
+.customer-avatar{width:295px;height:245px;margin:28px auto 0;border-radius:50%;background-image:url('assets/images/play/S09-tail.webp');background-repeat:no-repeat;background-size:1344px 768px;box-shadow:inset 0 0 0 7px #fff7e6}
+.customer-0{background-position:-15px -250px}.customer-1{background-position:-260px -290px}.customer-2{background-position:-1000px -280px}
+.customer-name{font:42px 'Heinemann Bold';color:#4b7468;margin-top:12px}
+.customer-thought{position:absolute;right:-8px;top:-28px;background:#fff8d9;border:4px solid #e8c16c;border-radius:28px;width:100px;height:90px;display:flex;align-items:center;justify-content:center;color:#dfad36;font-size:70px}
+.customer-meal{position:absolute;left:25px;right:25px;bottom:20px;height:110px;display:flex;align-items:center;justify-content:center;animation:enter .6s .6s both;background:url('assets/images/ui-v2/plate.webp') center/100% 100% no-repeat}
+.customer-meal img{width:90px;height:100px;object-fit:contain}
+#stage[data-scene='S07'] #screen>.progress{left:1400px;top:183px}
+.play-drag-ghost{position:absolute;z-index:50;width:180px;height:180px;pointer-events:none;background:none;border:0;filter:drop-shadow(0 14px 12px #45372144);padding:0}
+.play-drag-ghost img{width:170px;height:178px;object-fit:contain}.play-drag-ghost .burger-part{width:180px;height:150px}
+#stage[data-scene='S09'][data-phase='ready'][data-done='false'] #background{object-fit:cover}
+@media(prefers-reduced-motion:reduce){.bobo-reaction img,.reward-stars{animation:none;opacity:1}.reward-rays{display:none}.order-plate.served{animation:none;opacity:0}}
+
+
+.tray-item{display:flex;align-items:center;justify-content:center}
+.tray-item img{display:block}
+.review-board .summary-word .word{width:100%;line-height:1;height:94px}
+.review-board>.instruction{background:#fff8eae8;border:3px solid #d1c09e;border-radius:25px;margin:0 100px 12px;height:80px;font-size:48px;box-shadow:0 5px 0 #8d795125}
+.customer-0{background-position:-140px -310px}.customer-1{background-position:-340px -355px}.customer-2{background-position:-950px -365px}
+.customer-card{background:#fff7e6}
+.bobo-reaction.cheer::before{inset:-20px 0 -12px;border:4px solid #e0bd7c;border-radius:55px;background:#fff7e6;box-shadow:0 10px 24px #62442328}
+.bobo-reaction{right:28px;bottom:155px;width:530px;height:625px}
+.kitchen-word{bottom:50px}
+.tray-help{left:315px;bottom:58px;width:615px;font-size:25px}
+.lunch-panel>.feedback{bottom:132px;font-size:30px}
+.review-board .summary-word .word{height:104px}
+.review-board .summary-word .food-group{height:158px}
+.review-board .summary-word .food-group[data-count='1'] .food{height:158px}
+.bobo-reaction.cheer{right:12px;top:178px;bottom:auto;width:580px;height:716px}
+.bobo-reaction.cheer::before{inset:0;border-radius:48px}
+.bobo-reaction.cheer img{padding:22px 12px 12px}
+.tray-help{bottom:108px}
+.lunch-panel>.feedback{bottom:155px}
+/* V3 guided service revision */
+.discover-panel>.progress,.lunch-panel>.progress{position:absolute;z-index:3;top:56px;left:56px;min-width:90px;padding:10px 16px;font-size:30px;height:50px;line-height:1;border:0;background:#eceddb;box-shadow:inset 0 2px 4px #5b73581a}
+.lunch-panel>.progress{left:auto;right:54px;top:58px;font-size:27px;min-width:145px}.lunch-panel>.progress .english{margin-right:10px}
+.lunch-panel>.instruction{margin-right:170px;font-size:48px}.discover-panel>.instruction{margin-left:160px;margin-right:160px}
+.serve-bell{right:48px;bottom:38px;width:190px;height:177px;background:none;padding:0;border:0;filter:drop-shadow(0 8px 5px #72512925)}
+.serve-bell img{width:100%;height:100%;object-fit:contain;pointer-events:none}.serve-bell:disabled{opacity:.55;filter:grayscale(.2)}
+.serve-bell:not(:disabled){animation:bell-invite 2.5s ease-in-out infinite}.serve-bell:active{transform:translateY(8px) scale(.96)}
+@keyframes bell-invite{0%,75%,100%{rotate:0deg}80%{rotate:5deg}87%{rotate:-5deg}94%{rotate:3deg}}
+.summary-heading{position:absolute;left:466px;top:5px;width:1000px;height:273px;background:url('assets/images/play/summary-sign.webp') center/100% 100% no-repeat;text-align:center}
+.summary-heading h1{position:absolute;left:95px;right:95px;top:56px;margin:0;color:#244f58;font:68px/1.25 'Heinemann Bold'}
+.summary-heading p{position:absolute;left:230px;right:230px;top:194px;margin:0;color:#fff7e6;font:39px/1.15 'Heinemann Bold';text-shadow:0 2px 2px #65452166}
+.summary-label{position:absolute;left:82px;top:232px;color:#fff8df;background:#5a8975;border:2px solid #f9e8ba;border-radius:16px;padding:12px 28px;font:31px/1 'Heinemann Bold';box-shadow:0 3px 0 #5368523b}
+.review-board{top:305px;height:605px}.review-board .summary-grid{top:0}
+.reward-stars{display:none}.reward-jewel{position:absolute;bottom:30px;left:252px;width:72px;height:72px;border-radius:50%;background:radial-gradient(circle at 36% 25%,#fffbe8 0,#f7d466 28%,#b97a22 78%);border:4px solid #fff2ba;box-shadow:inset 0 0 0 5px #dca948,0 4px 6px #8c611344}
+.reward-jewel:after{content:'✓';position:absolute;inset:0;display:grid;place-items:center;color:#fffbe9;font:43px 'Heinemann Bold'}
+.success-burst i{width:15px;height:15px;background:radial-gradient(circle,#fffdf4 5%,#ffe2a0 50%,#edba4c 90%);clip-path:polygon(50% 0,60% 40%,100% 50%,60% 60%,50% 100%,40% 60%,0 50%,40% 40%);filter:drop-shadow(0 0 4px #ffecc0)}
+.ending-listen{position:absolute;right:52px;top:44px}.media-retry,.voice-retry{position:absolute;z-index:35;display:flex;align-items:center;justify-content:center;gap:20px;border:3px solid #fbe7ba;border-radius:36px;background:#fff7e8;color:#285660;box-shadow:0 8px 20px #352b2740;font:42px 'Heinemann Bold';padding:25px 36px}
+.media-retry{left:740px;top:425px;min-width:440px}.voice-retry{right:170px;top:55px;font-size:27px;padding:14px 22px}.media-retry .icon{width:55px;height:55px}
+.show-guide{position:absolute;left:1500px;top:188px;border:2px solid #d6c5a4;border-radius:25px;background:#fff7e7;color:#285660;display:flex;align-items:center;gap:13px;padding:14px 22px;font:28px 'Heinemann Bold'}.show-guide .icon{width:28px;height:28px}
+.play-guide{position:absolute;z-index:10;left:94px;top:259px;width:1228px;height:610px;border-radius:30px;background:#fff8eafc;text-align:center;padding:20px 34px}
+.play-guide h2{font:51px/1.25 'Heinemann Bold';margin:0;color:#285660}.play-guide p{font:34px/1.3 'Heinemann Roman';color:#658477;margin:12px 0}
+.guide-story{position:absolute;left:55px;right:55px;top:160px;height:285px;display:flex;justify-content:center;align-items:center;gap:36px}
+.guide-friend{position:relative;width:340px;height:280px}.guide-friend .customer-avatar{margin:15px 0;width:250px;height:235px}.wish-burger{position:absolute;right:-12px;top:-12px;background:#fff;border:3px solid #e4d4ae;border-radius:30px;width:140px;height:150px;box-shadow:0 6px 0 #c4b99433}.wish-burger img{width:130px;height:130px;object-fit:contain}
+.guide-assembly{position:relative;width:450px;height:280px}.guide-assembly .dish{position:absolute;bottom:0;left:0;right:0;height:115px}.demo-layer{position:absolute;left:98px;width:260px;height:200px;animation:demo-stack 5.5s ease-out infinite}.demo-0{top:87px;--delay:0s}.demo-1{top:31px;--delay:.8s;animation-delay:.8s}.demo-2{top:-29px;--delay:1.6s;animation-delay:1.6s}
+@keyframes demo-stack{0%,8%{opacity:0;transform:translate(-210px,-45px)}22%,82%{opacity:1;transform:none}96%,100%{opacity:0;transform:none}}
+.guide-actions{position:absolute;bottom:20px;left:0;right:0;display:flex;justify-content:center}.guide-actions .btn{min-width:310px}
+.guide-listen,.guide-ring{width:190px;position:relative;display:flex;flex-direction:column;align-items:center;gap:12px;font:34px 'Heinemann Bold';color:#497666}.guide-listen .icon{height:95px;width:95px;padding:12px;background:#eef3dc;border-radius:30px;animation:guide-pulse 4s infinite}.guide-ring img{height:170px;width:170px;object-fit:contain;animation:bell-invite 4s 2s infinite}
+.guide-plate{width:490px;height:155px;position:relative}.guide-plate .food-group{position:absolute;inset:-65px 15px 22px;animation:guide-food 4s infinite}.guide-plate .food{height:160px!important;max-width:140px}.guide-plate>span:last-child{position:absolute;left:0;right:0;bottom:-65px;font:34px 'Heinemann Bold';color:#497666}
+@keyframes guide-food{0%,20%{opacity:0;transform:translateY(-40px)}40%,85%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes guide-pulse{0%,25%{box-shadow:0 0 0 15px #e7c56a55}40%,100%{box-shadow:0 0 0 0 #e7c56a00}}
+@media(prefers-reduced-motion:reduce){.demo-layer,.guide-plate .food-group{animation:none;opacity:1;transform:none}.guide-listen .icon,.guide-ring img,.serve-bell{animation:none}}
+.summary-heading h1{top:83px;font-size:65px}.summary-heading p{top:177px;font-size:36px}
+.discover-panel>.progress{left:100px;top:66px}
+.play-guide{background:#fff8ea}
+.ingredient[data-part='0']:not(:disabled):not(:has(.icon)){box-shadow:0 0 0 5px #edcf7580}
+.kitchen-panel:has(.ingredient[data-part='0']>.icon) .ingredient[data-part='1']:not(:has(.icon)){box-shadow:0 0 0 5px #edcf7580}
+.kitchen-panel:has(.ingredient[data-part='1']>.icon) .ingredient[data-part='2']:not(:has(.icon)){box-shadow:0 0 0 5px #edcf7580}
+.customer-yum{font:32px 'Heinemann Bold';color:#588153}.customer-card:has(.customer-meal){animation:friend-thanks .75s .55s ease-in-out}
+@keyframes friend-thanks{0%,100%{transform:none}45%{transform:translateY(-15px) rotate(-2deg)}}
+#stage[data-scene='S07'] .bobo-reaction.cheer{width:360px;height:440px;right:544px;top:470px}#stage[data-scene='S07'] .reward-jewel{width:46px;height:46px;left:158px;bottom:17px}#stage[data-scene='S07'] .reward-jewel:after{font-size:28px}
+
+/* V4: clear in-panel counters, narration-led demos, word-audio affordances. */
+.discover-panel>.progress{left:146px;top:105px;font-size:28px;min-width:84px;height:46px;padding:9px 14px}
+.lunch-panel>.progress{right:110px;top:88px;font-size:25px;min-width:142px;height:46px;padding:9px 13px}
+.lunch-panel>.instruction{margin-right:195px}
+.order-audio .icon-btn.core{width:76px;height:76px;min-width:76px;padding:14px}
+.order-audio .icon-btn.core .icon{width:43px;height:43px}
+.order-audio{gap:21px;top:146px;height:82px}
+.summary-listen-hint{position:absolute;left:335px;top:253px;height:44px;display:flex;align-items:center;gap:15px;color:#315f64;font:29px 'Heinemann Bold';text-shadow:0 1px 2px #fff}
+.summary-listen-hint .icon{width:30px;height:30px}
+.summary-word{position:relative}.summary-sound{position:absolute;right:17px;top:17px;background:#ffffffa8;border-radius:50%;width:39px;height:39px;display:grid;place-items:center;color:#568185}
+.summary-sound .icon{width:26px;height:26px}.summary-word:hover .summary-sound{background:#fff5c8}
+.guide-actions{gap:25px}.guide-replay{width:76px;height:76px;align-self:center}.guide-replay .icon{width:39px;height:39px}
+.play-guide .demo-layer{animation:none;opacity:0;transform:translate(-155px,-35px);transition:opacity .4s,transform .65s}
+.play-guide[data-step='1'] .demo-0,.play-guide[data-step='2'] .demo-0,.play-guide[data-step='3'] .demo-0,.play-guide[data-step='2'] .demo-1,.play-guide[data-step='3'] .demo-1,.play-guide[data-step='3'] .demo-2{opacity:1;transform:none}
+.play-guide .guide-listen .icon,.play-guide .guide-ring img,.play-guide .guide-plate .food-group{animation:none}
+.play-guide .guide-plate .food-group{opacity:0;transform:translateY(-45px);transition:opacity .4s,transform .65s}
+.play-guide[data-step='2'] .guide-plate .food-group,.play-guide[data-step='3'] .guide-plate .food-group{opacity:1;transform:none}
+.play-guide[data-step='1'] .guide-listen .icon{box-shadow:0 0 0 13px #e7c56a55}
+.play-guide[data-step='3'] .guide-ring img{animation:bell-invite 1.5s ease-in-out infinite}
+.cover-speaking .cover-prompt{animation:guide-pulse 1.2s infinite}.cover-speaking .cover-start{cursor:wait}
+@media(prefers-reduced-motion:reduce){.play-guide .demo-layer,.play-guide .guide-plate .food-group{transition:none}.cover-speaking .cover-prompt{animation:none}}
+
+#stage[data-speaking='yum_friend'] .customer-thought{box-shadow:0 0 0 9px #e7c56a55}#stage[data-speaking='yum_friend'] .customer-avatar{animation:friend-thanks .85s ease-in-out infinite}
+
+/* V4 correction: keep the actual bear visible; a DOM lifetime alone was insufficient. */
+.bobo-reaction.cheer img{animation:bobo-approval-enter .7s ease-out both;opacity:1}
+@keyframes bobo-approval-enter{from{opacity:0;transform:translateY(75px) scale(.85)}65%{opacity:1;transform:translateY(-6px) scale(1.02)}to{opacity:1;transform:none}}
+.play-guide>p{display:flex;justify-content:center;align-items:center;gap:15px}
+.guide-replay{display:inline-flex;align-items:center;justify-content:center;width:58px;height:58px;min-width:58px;padding:7px;border:0;background:none;box-shadow:none;color:#46796d;cursor:pointer;border-radius:10px;align-self:auto}
+.guide-replay .icon{width:36px;height:36px}.guide-replay:hover{color:#204f56}.guide-replay:focus-visible{outline:3px solid #387d88;outline-offset:2px}
+.cover-title-audio{position:absolute;right:48px;top:44px;z-index:12}
+@media(prefers-reduced-motion:reduce){.bobo-reaction.cheer img{animation:none;opacity:1}}
+
+</style>
+</head>
+<body>
+  <main id="stage" aria-label="Bobo's Magic Lunch Truck">
+    <img id="background" src="assets/images/cover.webp" alt="">
+    <video id="scene-video" playsinline preload="metadata" aria-label="Story video"></video>
+    <div id="screen"></div>
+    <div id="toolbar"></div>
+    <div id="modal"></div>
+  </main>
+  <audio id="voice" preload="auto"></audio>
+  <audio id="sfx" preload="auto"></audio>
+  <script>
+window.BOBO_LESSON = {
+  words: ['bean', 'egg', 'burger'],
+  titles: ['Bobo’s Magic Lunch Truck', 'Lunch time!', 'Open and listen', 'More friends!', 'One or more?', 'Fill the basket', 'Make more burgers', 'Lunch orders', 'Match the name', 'Lunch is ready!'],
+  orders: [
+    { id: 'L01', word: 'bean', answer: ['bean', 1], options: [['bean', 1], ['bean', 3], ['egg', 1]] },
+    { id: 'L02', word: 'eggs', answer: ['egg', 3], options: [['egg', 1], ['egg', 3], ['bean', 3]] },
+    { id: 'L03', word: 'burgers', answer: ['burger', 3], options: [['burger', 3], ['burger', 1], ['egg', 3]] },
+    { id: 'L04', word: 'egg', answer: ['egg', 1], options: [['egg', 3], ['burger', 1], ['egg', 1]] },
+    { id: 'L05', word: 'beans', answer: ['bean', 3], options: [['burger', 3], ['bean', 1], ['bean', 3]] },
+    { id: 'L06', word: 'burger', answer: ['burger', 1], options: [['burger', 1], ['bean', 1], ['burger', 3]] }
+  ],
+  labels: [{ kind: 'bean', count: 2, answer: 'beans' }, { kind: 'egg', count: 1, answer: 'egg' }, { kind: 'burger', count: 4, answer: 'burgers' }],
+  checks: { bean: 'beans', egg: 'egg', burger: 'burgers' },
+  captions: {
+    S01: ["Here comes Bobo’s lunch truck! It’s lunch time!", 'Look at the lids!', "What's inside? Let's find out!"],
+    S02: ["Hello! I'm Bobo.", 'Help me, please!'],
+    S03: ['One friend. One lunch.', 'Oh! More friends!', 'We need more food!'],
+    S04: ['More friends!', "Let's make more!"],
+    S09: ['Lunch is ready!', 'Thank you, my friends!', "Let's say the words. Then let's eat!"]
+  }
+};
+
+</script>
+  <script src="media-config.js"></script>
+  <script>
+(() => {
+  'use strict';
+  const D = window.BOBO_LESSON, M = window.BOBO_MEDIA;
+  const $ = s => document.querySelector(s);
+  const stage = $('#stage'), screen = $('#screen'), bg = $('#background'), video = $('#scene-video'), voice = $('#voice'), sfx = $('#sfx');
+  const S = { scene: 0, phase: 'ready', muted: false, paused: false, discovered: [], count: 1, countPhase: 'add', countPassed: {}, order: 0, label: 0, selected: null, answered: false, feedback: '', tone: '', busy: false, heard: false, audioFailed: false, done: false, orders: [], tray: [], cookStep: 0, burgersMade: 0, reactionTimer: null, guide: null, labelResults: [], log: [], orderOptions: [] };
+  let startPending = false, lidHintTimer = null, coverSoundPlayed = false;
+  let sceneEpoch = 0, voiceSerial = 0, voiceFinish = null, activeMedia = null, drag = null, lastPointerDrag = 0;
+  const icons = {
+    home:'<path d="m3 11 9-8 9 8M6 10v11h12V10M10 21v-7h4v7"/>',
+    sound:'<path d="M4 9h4l5-4v14l-5-4H4zM17 8c3 2 3 6 0 8M20 5c5 4 5 10 0 14"/>',
+    mute:'<path d="M4 9h4l5-4v14l-5-4H4zM17 9l5 6m0-6-5 6"/>',
+    play:'<path d="m8 4 13 8-13 8z"/>', pause:'<path d="M8 5v14M16 5v14"/>',
+    next:'<path d="M4 12h16M13 5l7 7-7 7"/>', back:'<path d="M20 12H4m7-7-7 7 7 7"/>',
+    retry:'<path d="M4 8V3m0 5h5M4 8a9 9 0 1 1-1 8"/>',
+    check:'<path d="m4 12 5 5L20 6"/>', plus:'<path d="M12 4v16M4 12h16"/>',
+    minus:'<path d="M4 12h16"/>', down:'<path d="M12 3v18m-7-7 7 7 7-7"/>',
+    bell:'<path d="M5 17h14l-2-4V9a5 5 0 0 0-10 0v4zm5 4h4M11 2h2"/>'
+  };
+  const icon = n => `<svg class="icon" viewBox="0 0 24 24" aria-hidden="true">${icons[n] || icons.next}</svg>`;
+  const button = (label, action, ic = 'next', secondary = false, disabled = false, extra = '') => `<button class="btn${secondary ? ' secondary' : ''}" data-action="${action}" ${disabled ? 'disabled' : ''} ${extra}>${icon(ic)}<span class="ink">${label}</span></button>`;
+  const iconButton = (label, action, ic, cls = '', extra = '') => `<button class="icon-btn ${cls}" data-action="${action}" aria-label="${label}" ${extra}>${icon(ic)}</button>`;
+  const food = (kind, n, entering = false) => `<span class="food-group" data-count="${n}">${Array.from({ length: n }, (_, i) => `<img class="food${entering && i === n - 1 ? ' new-food' : ''}" src="assets/images/${kind}.webp" alt="${kind}" draggable="false">`).join('')}</span>`;
+  const word = (kind, n) => `<span class="ink">${kind}${n > 1 ? '<span class="plural">s</span>' : ''}</span>`;
+  const kindNow = () => D.words[S.scene - 4];
+  function log(action, detail = {}) { S.log.push({ scene: `S${String(S.scene).padStart(2, '0')}`, action, ...detail }); }
+  function resize() { document.documentElement.style.setProperty('--scale', Math.min(innerWidth / 1920, innerHeight / 1080)); }
+  addEventListener('resize', resize); resize();
+  function stopVoice() {
+    $('.voice-retry')?.remove(); delete stage.dataset.speaking; voiceSerial++; voice.pause(); voice.onended = voice.onerror = voice.ontimeupdate = null;
+    if (voiceFinish) { const done = voiceFinish; voiceFinish = null; done(false); }
+  }
+  function stopMedia() {
+    $('.media-retry')?.remove(); clearTimeout(lidHintTimer); clearTimeout(S.reactionTimer); $('.bobo-reaction')?.remove(); cancelFoodDrag(); S.keyboardPick = null;
+    stopVoice(); sfx.pause(); video.pause(); video.onended = video.onerror = video.onplaying = video.ontimeupdate = null;
+    video.classList.remove('visible'); video.removeAttribute('src'); video.load(); activeMedia = null; S.paused = false;
+  }
+  function effect(name) {
+    if (S.muted) return Promise.resolve(false);
+    sfx.pause(); sfx.src = window.BOBO_SFX?.[name] || `assets/audio/sfx-${name}.mp3`; sfx.volume = name === 'rattle' ? .28 : .55;
+    return sfx.play().then(() => { log('effect-play', {clip:name}); return true; }).catch(() => false);
+  }
+  function playCoverCue() {
+    if (S.scene !== 0 || coverSoundPlayed || S.muted) return;
+    effect('cover').then(ok => { if (ok) coverSoundPlayed = true; });
+  }
+  function sayExtra(id, fallback) { return window.BOBO_AUDIO?.[id] ? say(id) : fallback ? say(fallback) : Promise.resolve(false); }
+  function scheduleLidHint(delay = 2200) {
+    clearTimeout(lidHintTimer);
+    if (matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+    lidHintTimer = setTimeout(() => {
+      if (S.scene !== 2 || S.phase !== 'ready' || document.hidden) return;
+      const lid = $('.discover-card.closed:not(:disabled) .lid');
+      if (!lid) return;
+      if (!voice.paused || drag) return scheduleLidHint(1000);
+      lid.classList.remove('hint-wiggle'); void lid.offsetWidth; lid.classList.add('hint-wiggle');
+      effect('rattle'); scheduleLidHint(5200);
+    }, delay);
+  }
+  function reactBobo(correct=true) {
+    clearTimeout(S.reactionTimer); $('.bobo-reaction')?.remove();
+    const el=document.createElement('div');el.className='bobo-reaction '+(correct?'cheer':'encourage');el.setAttribute('role','status');
+    el.setAttribute('aria-label',correct?'Bobo gives you a thumbs up':'Listen again and try another lunch');
+    el.innerHTML=correct?`<div class="reward-rays"></div><img src="assets/images/play/bobo-thumbs-up.webp" alt=""><div class="reward-jewel" aria-hidden="true"></div>`:`<div class="try-bubble">${icon('sound')}<span class="ink">Listen again</span></div>`;
+    stage.append(el);if(!correct)S.reactionTimer=setTimeout(()=>el.remove(),2100);
+  }
+  function celebrateSuccess() {
+    effect('correct');reactBobo(true);$('.success-burst')?.remove();
+    const burst=document.createElement('div');burst.className='success-burst';burst.setAttribute('aria-hidden','true');
+    burst.innerHTML=Array.from({length:20},(_,i)=>`<i style="--angle:${i*18}deg;--distance:${180+(i%3)*45}px;--delay:${i*.018}s"></i>`).join('');
+    $('.panel')?.append(burst);setTimeout(()=>burst.remove(),1800);
+  }
+
+  async function praise(ids=['nice']) {
+    celebrateSuccess();const el=$('.bobo-reaction'),started=performance.now();
+    await sequence(ids);
+    setTimeout(()=>{el?.remove();log('reward-finished');},Math.max(1100,3800-(performance.now()-started)));
+  }
+  function say(id, options = {}) {
+    stopVoice(); const serial = voiceSerial, epoch = sceneEpoch;
+    voice.src = window.BOBO_AUDIO?.[id] || `assets/audio/${id}.mp3`; voice.muted = S.muted; voice.volume = 1;
+    return new Promise(resolve => {
+      voiceFinish = resolve;
+      const finish = ok => {
+        if (serial !== voiceSerial) return;
+        voice.onended = voice.onerror = voice.ontimeupdate = null; voiceFinish = null; delete stage.dataset.speaking;
+        if (!ok && epoch === sceneEpoch) { S.audioFailed = true; log('audio-unavailable', { clip: id }); }
+        resolve(ok);
+      };
+      voice.onended = () => finish(true); voice.onerror = () => finish(false);
+      voice.ontimeupdate = () => { if (epoch === sceneEpoch && options.onTime) options.onTime(voice.currentTime, voice.duration); };
+      voice.play().then(() => { if (serial === voiceSerial) {stage.dataset.speaking=id;log('voice-play', { clip: id });} }).catch(error => {
+        if(serial!==voiceSerial)return;
+        log('voice-blocked',{clip:id,reason:error.name});finish(false);
+        if(epoch===sceneEpoch&&!S.muted&&!options.quiet){const retry=document.createElement('button');retry.className='voice-retry';retry.dataset.action='word';retry.dataset.word=id;retry.innerHTML=icon('sound')+'<span>Tap to listen</span>';stage.append(retry);}
+      });
+    });
+  }
+  async function sequence(ids) { const epoch = sceneEpoch; for (const id of ids) { if (epoch !== sceneEpoch) return; if (!await say(id)) return; } }
+  function toolbar() {
+    $('#toolbar').innerHTML = iconButton('Home', 'home', 'home', 'home') + iconButton(S.muted ? 'Turn sound on' : 'Mute sound', 'mute', S.muted ? 'mute' : 'sound', 'sound') + (activeMedia ? iconButton(S.paused ? 'Play' : 'Pause', 'pause', S.paused ? 'play' : 'pause', 'pause') : '');
+  }
+  function header() {
+    return `<h1 class="title">${D.titles[S.scene]}</h1><div class="section-progress" aria-label="Lesson progress">${[2, 4, 7, 8, 9].map(n => `<span class="dot ${S.scene >= n ? 'active' : ''}"></span>`).join('')}</div>`;
+  }
+  function progress() {
+    if (S.scene === 7) return `<span class="progress"><span class="english">Orders</span>${S.order + 1}/6</span>`;
+    if (S.scene === 8) return `<span class="progress">${S.label + 1}/3</span>`;
+    if (S.scene === 2) return `<span class="progress">${S.discovered.length}/3</span>`;
+    return '';
+  }
+  function canNext() {
+    if (S.scene === 2) return S.discovered.length === 3;
+    if (S.scene >= 4 && S.scene <= 6) return !!S.countPassed[kindNow()];
+    if (S.scene === 7 || S.scene === 8) return S.answered;
+    return true;
+  }
+  function footer(opts = {}) {
+    const label = opts.label || (S.scene === 9 ? 'Done' : S.scene === 7 || S.scene === 8 ? 'Next' : 'Continue');
+    return `<div class="footer"><div class="footer-side"></div><div class="footer-side">${button(label, opts.action || 'next', label === 'Done' ? 'check' : 'next', false, false)}</div></div>`;
+  }
+  function feedback() { return `<div class="feedback ${S.tone}" aria-live="polite">${S.feedback ? icon(S.tone === 'retry' ? 'retry' : 'check') + `<span>${S.feedback}</span>` : ''}</div>`; }
+  function sparkles() { return `<div class="sparkles">${Array.from({length:10},(_,i)=>`<i style="--x:${8+(i*31)%85}%;--y:${15+(i*19)%70}%;--delay:${i*.37}s"></i>`).join('')}</div>`; }
+  function confetti() { return `<div class="celebration">${Array.from({length:32},(_,i)=>`<i style="--x:${4+(i*17)%92}%;--delay:${(i%8)*.11}s;--drift:${(i%2?1:-1)*(30+i%5*20)}px;--color:${['#ee8c64','#65aba4','#f0ca75','#fdf6df'][i%4]}"></i>`).join('')}</div>`; }
+  function render() {
+    toolbar();
+    const scene = S.scene; stage.dataset.scene = `S${String(scene).padStart(2, '0')}`; stage.dataset.phase = S.phase; stage.dataset.done = String(S.done);
+    if (scene === 0) {
+      bg.src = 'assets/images/motion/cover-base.webp'; screen.innerHTML = `<div class="scene-art cover-art" aria-hidden="true"><div class="art-title"><img src="assets/images/motion/cover-title.webp" alt=""></div><div class="art-hero"><img src="assets/images/motion/cover-hero.webp" alt=""></div>${sparkles()}<div class="cover-prompt">${icon('play')}<span class="ink">Start</span></div></div><button class="cover-start" data-action="start" aria-label="Start Bobo’s Magic Lunch Truck"></button><button class="cover-title-audio icon-btn" data-action="word" data-word="cover_title" aria-label="Listen to the title">${icon('sound')}</button>`; return;
+    }
+    if (S.phase === 'watch') {
+      const key = `S${String(scene).padStart(2, '0')}`; bg.src = `assets/images/${M[key].poster}.webp`;
+      const mixed = [2, 4, 9].includes(scene);
+      screen.innerHTML = `<h1 class="story-title">${D.titles[scene]}</h1><div class="video-footer"><div class="caption-track"><div id="caption"><span class="ink">${D.captions[key][0]}</span></div></div>${button('Next','skip','next')}</div>`;
+      return;
+    }
+    bg.src = (scene === 9 ? M.S09.still : scene >= 4 ? M.S04.still : M.S02.still) || `assets/images/${scene === 9 ? 'party' : 'counter'}.webp`;
+    if(scene===2||scene===6)bg.src='assets/images/counter.webp';
+    if(scene===7)bg.src='assets/images/motion/cover-base.webp';
+    if(scene===9&&!S.done)bg.src='assets/images/party.webp';
+    if (scene === 2) renderDiscover();
+    else if (scene === 6) renderKitchen();
+    else if (scene >= 4 && scene <= 5) renderCount();
+    else if (scene === 7) renderOrders();
+    else if (scene === 8) renderLabels();
+    else if (scene === 9) renderSummary();
+    if(S.guide)renderGuide();
+  }
+  function renderDiscover() {
+    screen.innerHTML = `${header()}<section class="panel discover-panel">${progress()}<h2 class="instruction">What’s inside?</h2><p class="hint">Open a lid. Listen and say.</p><div class="discover-grid">${D.words.map((k,i)=>`<button class="discover-card ${S.discovered.includes(k)?'opened':'closed'}" data-action="discover" data-kind="${k}" aria-label="${S.discovered.includes(k)?'Listen to '+k:'Open lid '+(i+1)}" ${!S.discovered.includes(k)&&i>S.discovered.length?'disabled':''}><span class="dish"><img class="food" src="assets/images/${k}.webp" alt="${k}" draggable="false"><span class="lid"></span></span><span class="card-label ${S.discovered.includes(k)?'word':'clue'}"><span class="ink">${S.discovered.includes(k)?k:'?'}</span></span></button>`).join('')}</div>${feedback()}</section>${footer()}`;
+  }
+  function openFoodCard(el) {
+    const k=el.dataset.kind;
+    if(S.discovered.includes(k)) {say(k);return;}
+    clearTimeout(lidHintTimer);
+    S.discovered.push(k); log('discover',{kind:k}); effect('open');
+    el.classList.replace('closed','opened'); el.querySelector('.lid').classList.remove('hint-wiggle');
+    el.setAttribute('aria-label','Listen to '+k);
+    const label=el.querySelector('.card-label'); label.classList.replace('clue','word'); label.innerHTML=`<span class="ink">${k}</span>`;
+    const nextCard=$('.discover-card.closed'); if(nextCard) nextCard.disabled=false;
+    $('.discover-panel>.progress').innerHTML=`<span class="ink">${S.discovered.length}/3</span>`;
+    if(S.discovered.length===3) {
+      S.feedback=''; $('.feedback').replaceChildren();
+      praise([k,'nice']);
+    } else {say(k);scheduleLidHint();}
+  }
+  function renderCount() {
+    const kind = kindNow();
+    if (S.countPhase === 'check') {
+      screen.innerHTML = `${header()}${progress()}<section class="panel"><h2 class="instruction">Listen. Which plate?</h2><div class="listen-position">${iconButton('Listen to the word', 'listen', 'sound', 'core')}</div>${S.audioFailed || S.muted ? `<div class="sound-help fallback-word">${D.checks[kind]}</div>` : ''}<div class="choices check-choices">${[1, 3].map(n => `<button class="choice ${S.tone === 'retry' && S.selected === n ? 'wrong' : ''} ${S.countPassed[kind] && D.checks[kind] === kind + (n > 1 ? 's' : '') ? 'correct' : ''}" data-action="count-check" data-count="${n}" aria-label="${n} ${kind}${n > 1 ? 's' : ''}" ${S.countPassed[kind] || !S.heard ? 'disabled' : ''}>${food(kind, n)}</button>`).join('')}</div>${feedback()}</section>${footer()}`; return;
+    }
+    const removing = S.countPhase === 'remove';
+    const instruction = S.countPassed[kind] ? 'Ready to cook!' : removing ? 'Drag them back.' : 'Drag one more.';
+    const place = kind === 'egg' ? 'basket' : 'plate';
+    screen.innerHTML = `${header()}${progress()}<section class="panel drag-panel"><h2 class="instruction">${instruction}</h2><p class="hint">${removing?'Make one again.':(kind==='egg'?'Put it in the basket.':'Put it on the plate.')}</p><div class="count-stage"><div id="return-zone" class="pantry-zone" role="button" tabindex="0" data-drop="remove" aria-label="Return one ${kind} here">${!removing?`<button class="food-token source-token" data-drag="add" aria-label="Drag one ${kind}" ${S.busy?'disabled':''}><img class="food" src="assets/images/${kind}.webp" alt="${kind}" draggable="false"></button>`:icon('back')}<span class="tray-label">${removing?'Put it back':'More food'}</span></div><div class="drag-direction" aria-hidden="true">${icon(removing?'back':'next')}</div><div id="drop-zone" class="count-dish dish ${kind==='egg'?'basket':''}" data-drop="add" role="button" tabindex="0" aria-label="Put one ${kind} ${kind==='egg'?'in':'on'} the ${place}"><span class="food-group" data-count="${S.count}">${Array.from({length:S.count},(_,i)=>`<button class="food-token placed-token ${S.busy&&!removing&&i===S.count-1?'new-food':''}" data-drag="remove" aria-label="Drag ${kind} ${i+1} back" ${!removing||S.busy?'disabled':''}><img class="food" src="assets/images/${kind}.webp" alt="${kind}" draggable="false"></button>`).join('')}</span></div><button class="count-word word-audio" data-action="word" data-word="${kind}${S.count>1?'s':''}" aria-label="Listen to ${kind}${S.count>1?'s':''}"><span class="word">${word(kind,S.count)}${icon('sound')}</span></button></div>${feedback()}</section>${footer()}`;
+  }
+  function renderKitchen() {
+    const made=S.burgersMade, step=S.cookStep, complete=step===3;
+    screen.innerHTML=`${header()}<section class="panel kitchen-panel"><h2 class="instruction">${complete?(made===1?'One burger!':'More burgers!'):'Build a burger!'}</h2><p class="hint">${complete?'Listen and say.':'Stack the food. Bottom to top.'}</p><div class="ingredient-rail">${[0,1,2].map(i=>`<button class="ingredient" data-action="build-part" data-part="${i}" data-piece="${i}" aria-label="${['Bottom bun','Filling','Top bun'][i]}" ${complete||S.busy?'disabled':''}><span class="burger-part part-${i}"></span>${i<step?icon('check'):''}</button>`).join('')}</div><div class="burger-build-zone" id="burger-build-zone" aria-label="Build the burger here"><div class="build-plate dish"></div>${[0,1,2].filter(i=>i<step).map(i=>`<span class="burger-part stacked part-${i} layer-${i}"></span>`).join('')}${!step?`<span class="stack-target">${icon('down')}</span>`:''}</div><div class="finished-burgers">${made===2?food('burger',2):''}</div>${complete?`<button class="kitchen-word" data-action="word" data-word="${made===1?'burger':'burgers'}">${word('burger',made)}${icon('sound')}</button>`:''}<div class="kitchen-controls">${complete&&made===1?button('One more','cook-more','plus'):''}</div></section>${footer()}`;
+  }
+  async function buildPart(i) {
+    if(S.scene!==6||S.guide||S.busy||S.cookStep===3)return;
+    if(i!==S.cookStep){effect('tap');$('.ingredient[data-part="'+S.cookStep+'"]')?.animate([{scale:1},{scale:1.12},{scale:1}],{duration:500});return;}
+    const epoch=sceneEpoch;S.busy=true;S.cookStep++;effect('discover');render();
+    await new Promise(r=>setTimeout(r,380));if(epoch!==sceneEpoch)return;
+    if(S.cookStep===3){S.burgersMade++;S.count=S.burgersMade;S.countPassed.burger=S.burgersMade===2;render();await praise([S.burgersMade===1?'burger':'burgers','nice']);}
+    if(epoch===sceneEpoch){S.busy=false;render();}
+  }
+  function trayAdd(kind) {
+    if(S.scene!==7||S.guide||S.answered||S.busy||S.tray.length>=3)return;
+    S.tray.push(kind);S.feedback='';S.tone='';effect('discover');renderOrders();log('tray-add',{kind,count:S.tray.length});
+  }
+  function trayRemove(i) {if(S.answered||S.busy)return;S.tray.splice(i,1);S.feedback='';S.tone='';effect('tap');renderOrders();}
+  async function serveTray() {
+    if(S.scene!==7||S.answered||S.busy||!S.tray.length||!S.heard)return;
+    const chime=new Audio('assets/audio/sfx-discover.mp3');chime.volume=.45;chime.muted=S.muted;chime.play().catch(()=>{});const q=D.orders[S.order],kind=q.answer[0],plural=q.word.endsWith('s');
+    const right=S.tray.every(k=>k===kind)&&(plural?S.tray.length>1:S.tray.length===1);
+    const record=S.orders[S.order] ||= {id:q.id,attempts:0,assisted:S.muted||S.audioFailed};
+    record.attempts++;record.correct=right;record.assisted ||= S.muted||S.audioFailed||record.attempts>2;
+    log('order-answer',{id:q.id,contents:[...S.tray],correct:right});
+    if(!right){S.feedback='Listen. Change your plate.';S.tone='retry';render();reactBobo(false);effect('tap');await sequence(['retry',q.word]);return;}
+    S.answered=true;S.feedback='';S.tone='';effect('correct');render();sequence([q.word,'yum_friend']);
+  }
+  function orderViewOptions() {
+    if (!S.orderOptions.length) {
+      S.orderOptions = D.orders[S.order].options.map(a => [...a]);
+      for (let i = S.orderOptions.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [S.orderOptions[i], S.orderOptions[j]] = [S.orderOptions[j], S.orderOptions[i]]; }
+    }
+    return S.orderOptions;
+  }
+  function renderOrders() {
+    const q=D.orders[S.order],help=S.muted||S.audioFailed||(S.orders[S.order]?.attempts||0)>=2;
+    screen.innerHTML=`${header()}<section class="panel lunch-panel">${progress()}<h2 class="instruction">Lunch for a friend!</h2><div class="order-audio">${iconButton('Listen to the order','listen','sound','core')}<span>${help?q.word:'Listen, then fill the plate.'}</span></div><div class="pantry-shelf">${D.words.map(k=>`<button class="pantry-food" data-action="tray-add" data-kind="${k}" data-order-food="${k}" aria-label="Add one ${k} to the plate" ${S.answered||S.tray.length>=3?'disabled':''}><img src="assets/images/${k}.webp" alt=""><span class="ink">${k}</span></button>`).join('')}</div><div class="order-plate dish ${S.answered?'served':''}" id="order-tray" aria-label="Lunch plate"><div class="tray-items">${S.tray.map((k,i)=>`<button class="tray-item" data-action="tray-remove" data-index="${i}" aria-label="Remove ${k}" ${S.answered?'disabled':''}><img src="assets/images/${k}.webp" alt="${k}"></button>`).join('')}</div>${!S.tray.length?'<span class="plate-hint">Your plate</span>':''}</div><p class="tray-help">${S.answered?'Yum! Thank you!':'Listen. Fill the plate. Ring the bell!'}</p><button class="serve-bell" data-action="serve-tray" aria-label="Ring the bell and serve" ${!S.tray.length||S.answered||!S.heard?'disabled':''}><img src="assets/images/play/service-bell.webp" alt=""></button>${feedback()}</section><aside class="customer-card"><div class="customer-avatar customer-${S.order%3}"></div><div class="customer-name">${['Rabbit','Turtle','Duck'][S.order%3]}</div><div class="customer-thought">${S.answered?'<span class="customer-yum">Yum!</span>':icon('sound')}</div>${S.answered?`<div class="customer-meal">${S.tray.map(k=>`<img src="assets/images/${k}.webp" alt="">`).join('')}</div>`:''}</aside>${footer()}`;
+  }
+
+  function renderLabels() {
+    const q = D.labels[S.label];
+    screen.innerHTML = `${header()}${progress()}<section class="panel"><h2 class="instruction">Choose a name. Then submit.</h2><div class="label-food dish">${food(q.kind, q.count)}</div><div class="label-options">${[q.kind, q.kind + 's'].map(w => `<button class="label-choice ${S.selected === w ? 'selected' : ''}" data-action="select-label" data-word="${w}" ${S.answered ? 'disabled' : ''}><span class="ink">${w}</span>${icon('sound')}</button>`).join('')}</div>${feedback()}</section><div class="footer"><div class="footer-side"></div><div class="footer-side">${!S.answered ? button('Submit', 'submit-label', 'check', true, !S.selected) : ''}${button('Next','next','next')}</div></div>`;
+  }
+  function enterReview() { stopVoice(); S.phase='ready'; render(); say('summary_hint'); }
+  function beginReview() { enterReview(); }
+
+  function renderSummary() {
+    if (S.done) {
+      bg.src = 'assets/images/motion/ending-base.webp'; screen.innerHTML = `<div class="scene-art ending-art" aria-hidden="true"><div class="art-actors"><img src="assets/images/motion/ending-actors.webp" alt=""></div><div class="art-title"><img src="assets/images/motion/ending-title.webp" alt=""></div>${sparkles()}${confetti()}</div><div class="ending-retry">${button('Play again!', 'restart', 'retry')}</div><button class="ending-listen icon-btn" data-action="word" data-word="ending_bobo" aria-label="Listen to Bobo again">${icon('sound')}</button>`; return;
+    }
+    screen.innerHTML = `<header class="summary-heading"><h1>Lunch is ready!</h1><p>Let’s say the words!</p></header><div class="summary-label">Summary</div><section class="panel review-board" aria-label="Summary"><div class="summary-grid">${D.words.map(k => `<div class="summary-column">${[1, 3].map(n => `<button class="summary-word" data-action="word" data-word="${k}${n > 1 ? 's' : ''}" aria-label="Listen to ${k}${n > 1 ? 's' : ''}">${food(k, n)}<span class="word">${word(k, n)}</span><span class="summary-sound" aria-hidden="true">${icon('sound')}</span></button>`).join('')}</div>`).join('')}</div></section>${footer()}`;
+  }
+  function startGuide(kind){stopVoice();S.guide=kind;render();log('guide',{kind});playGuideAudio();}
+  function playGuideAudio(){
+    const kitchen=S.guide==='kitchen',guide=$('.play-guide');if(!guide)return;
+    guide.dataset.step='0';
+    say(kitchen?'kitchen_intro':'orders_intro',{onTime:t=>{guide.dataset.step=String(kitchen?(t<4.5?0:t<5.8?1:t<7?2:3):(t<2.5?0:t<4.4?1:t<6.6?2:3));}});
+  }
+  function beginGame(){const kind=S.guide;S.guide=null;stopVoice();render();log('guide-complete',{kind});if(kind==='orders')hearTarget();else say('burger');}
+  function renderGuide(){
+    const kitchen=S.guide==='kitchen';const el=document.createElement('section');el.className='play-guide '+(kitchen?'cook-guide':'order-guide');el.setAttribute('aria-label',kitchen?'Help Rabbit make lunch':'How to serve a friend');
+    const q=D.orders[S.order],k=q.answer[0],n=q.word.endsWith('s')?3:1;
+    el.innerHTML=`<h2>${kitchen?'Rabbit is hungry!':'Our friends are hungry!'}</h2><p>${kitchen?'Let’s make a burger for Rabbit.':'Listen. Fill the plate. Ring the bell!'}<button class="guide-replay" data-action="guide-listen" aria-label="Listen to the instructions">${icon('sound')}</button></p><div class="guide-story">${kitchen?`<div class="guide-friend"><div class="customer-avatar customer-0"></div><div class="wish-burger"><img src="assets/images/burger.webp" alt="burger"></div></div><div class="guide-assembly"><div class="dish"></div>${[0,1,2].map(i=>`<span class="burger-part part-${i} demo-layer demo-${i}"></span>`).join('')}</div>`:`<div class="guide-listen">${icon('sound')}<span>Listen</span></div><div class="guide-plate dish">${food(k,n)}<span>Make</span></div><div class="guide-ring"><img src="assets/images/play/service-bell.webp" alt="Ring the bell"><span>Ding!</span></div>`}</div><div class="guide-actions">${button(kitchen?'Let’s cook!':'My turn!','begin-game','play')}</div>`;
+    screen.append(el);$('.footer')?.remove();
+  }
+  function showMediaRetry(label){$('.media-retry')?.remove();const b=document.createElement('button');b.className='media-retry';b.dataset.action='media-retry';b.innerHTML=icon('play')+`<span>${label}</span>`;stage.append(b);}
+  function resumeStory(){
+    if(!activeMedia)return;$('.media-retry')?.remove();S.paused=false;toolbar();
+    if(activeMedia.fallback){const epoch=sceneEpoch;say(M[activeMedia.key].audio).then(ok=>{if(ok&&epoch===sceneEpoch)finishMedia();});return;}
+    video.classList.add('visible');video.play().catch(error=>{log('video-blocked',{reason:error.name});S.paused=true;toolbar();showMediaRetry('Play story');});
+  }
+  function finishMedia() {
+    if (!activeMedia) return;
+    const done = activeMedia.done; activeMedia = null; stopMedia(); done();
+  }
+  function playSceneMedia(scene, done) {
+    const key = `S${String(scene).padStart(2, '0')}`, cfg = M[key], epoch = sceneEpoch;
+    S.phase = 'watch'; activeMedia = { key, done, started: false }; render(); toolbar();
+    if (cfg.still) { const tail = new Image(); tail.src = cfg.still; }
+    const cues = D.captions[key];
+    const update = (t, duration) => {
+      if (!Number.isFinite(duration) || duration <= 0) return;
+      const idx = cfg.captionTimes ? Math.max(0, Math.min(cues.length - 1, cfg.captionTimes.filter(start => t >= start).length - 1)) : Math.min(cues.length - 1, Math.floor(t / duration * cues.length));
+      const caption=$('#caption .ink');if(caption&&caption.textContent!==cues[idx])caption.textContent=cues[idx];
+    };
+    const startAudio = () => {
+      if (epoch !== sceneEpoch || !activeMedia || activeMedia.started) return;
+      activeMedia.started = true;
+      say(cfg.audio, { onTime: update }).then(ok => {
+        if (epoch !== sceneEpoch || !activeMedia) return;
+        if (!cfg.src || activeMedia.fallback || S.audioFailed) { if (ok) finishMedia(); else { S.paused = true; toolbar(); } }
+      });
+    };
+    if (cfg.src) {
+      video.src = cfg.src; video.muted = cfg.audioMode !== 'embedded' || S.muted;
+      video.classList.add('visible');
+      video.onplaying = () => { if (cfg.audioMode !== 'embedded') startAudio(); };
+      video.ontimeupdate = () => { if (cfg.audioMode === 'embedded') update(video.currentTime, video.duration); };
+      video.onended = () => { if (epoch === sceneEpoch) finishMedia(); };
+      video.onerror = () => { if (epoch !== sceneEpoch || !activeMedia || activeMedia.key !== key) return; video.classList.remove('visible');activeMedia.fallback=true;log('video-unavailable',{key,code:video.error?.code});S.paused=true;toolbar();showMediaRetry('Listen to story'); };
+      video.play().catch(error => {
+        if(error.name==='AbortError'||epoch!==sceneEpoch||!activeMedia||activeMedia.key!==key||activeMedia.fallback)return;
+        log('video-blocked',{key,reason:error.name}); S.paused=true;toolbar();showMediaRetry('Play story');
+      });
+    } else startAudio();
+  }
+  function go(scene, opts = {}) {
+    sceneEpoch++; stopMedia(); S.keyboardPick=null; S.guide=null; S.scene = Math.max(0, Math.min(9, scene===8?9:scene)); scene=S.scene; S.phase = 'ready';
+    S.feedback = ''; S.tone = ''; S.busy = false; S.audioFailed = false; S.heard = false; S.selected = null; S.answered = false;
+    log('enter');
+    const epoch = sceneEpoch;
+    const ready = () => { S.phase = 'ready'; render(); };
+    if (scene === 1) return playSceneMedia(1, () => go(2));
+    if (scene === 2) {
+      if (!opts.skipIntro) return playSceneMedia(2, () => { ready(); say('open'); scheduleLidHint(); });
+      ready(); scheduleLidHint(); return;
+    }
+    if (scene === 3) return playSceneMedia(3, () => go(4));
+    if (scene === 6) {S.cookStep=0;S.burgersMade=0;S.count=0;ready();if(!opts.skipIntro)startGuide('kitchen');else say('burger');return;}
+    if (scene >= 4 && scene <= 5) {
+      S.count = 1; S.countPhase = 'add'; delete S.countPassed[kindNow()];
+      const begin = () => { ready(); sayExtra('drag_' + kindNow(), 'add_' + kindNow()); };
+      if (scene === 4 && !opts.skipIntro) return playSceneMedia(4, begin);
+      begin(); return;
+    }
+    if (scene === 7) { S.order=0;S.orders=[];S.tray=[];ready();if(!opts.skipIntro)startGuide('orders');else hearTarget();return; }
+    if (scene === 8) { S.label = 0; S.labelResults = []; ready(); say('labels'); return; }
+    if (scene === 9) {
+      S.done = false;
+      if (!opts.skipIntro) return playSceneMedia(9, beginReview);
+    }
+    ready();
+  }
+  function restart() { coverSoundPlayed=false; S.discovered = []; S.countPassed = {}; S.orders = []; S.labelResults = []; S.done = false; go(0); playCoverCue();say('cover_title',{quiet:true}); }
+  function hearTarget() {
+    const epoch = sceneEpoch;
+    const target = S.scene === 7 ? D.orders[S.order].word : D.checks[kindNow()];
+    S.heard = true; render();
+    say(target).then(ok => { if (epoch === sceneEpoch && !ok) render(); });
+  }
+  async function changeCount(delta) {
+    if (S.busy || S.countPhase === 'check') return;
+    const epoch = sceneEpoch, kind = kindNow();
+    S.count = Math.max(1, Math.min(3, S.count + delta)); S.busy = true;
+    log('count-change', { kind, count: S.count }); effect('discover'); render();
+    await new Promise(resolve => setTimeout(resolve, 350));
+    if (epoch !== sceneEpoch) return;
+    await say(kind + (S.count > 1 ? 's' : ''));
+    if (epoch !== sceneEpoch) return;
+    S.busy = false;
+    if (S.count===3 && S.countPhase==='add') { S.countPhase='remove';S.countPassed[kind]=kind==='egg';S.feedback='';render();if(kind==='bean')sayExtra('drag_remove','remove');else praise(); }
+    else if (S.count===1 && S.countPhase==='remove') { S.countPassed[kind]=true;S.countPhase='add';S.feedback='';render();praise(); }
+    else {render();if(S.count===2&&S.countPhase==='add')sayExtra('add_'+kind);}
+  }
+  function next() {
+    if(S.guide){beginGame();return;}
+    if (!canNext()) log('skip-question', { order: S.scene === 7 ? S.order : null, label: S.scene === 8 ? S.label : null });
+    stopVoice();
+    if (S.scene === 7) {
+      if (S.order === D.orders.length-1) return go(9);
+      sceneEpoch++;clearTimeout(S.reactionTimer);$('.bobo-reaction')?.remove(); S.order++; S.tray=[];S.orderOptions = []; S.selected = null; S.answered = false; S.feedback = ''; S.tone = ''; S.audioFailed = false; S.heard = false;
+      render(); hearTarget(); return;
+    }
+    if (S.scene === 8) {
+      if (S.label === 2) return go(9);
+      sceneEpoch++; S.label++; S.selected = null; S.answered = false; S.feedback = ''; S.tone = ''; render(); return;
+    }
+    if (S.scene === 9 && S.phase === 'review-intro') {enterReview();return;}
+    if (S.scene === 9) { S.done = true; log('done'); render();sayExtra('ending_bobo');effect('finish');return; }
+    go(S.scene + 1);
+  }
+  function onAction(action, el) {
+    if (el?.disabled) return;
+    if (!['listen','word','start','restart','confirm-home','discover','serve-tray','media-retry'].includes(action)) effect('tap');
+    if(action==='start'){go(1);effect('cover');return;}
+    if(action==='begin-game'){beginGame();return;}
+    if(action==='guide-listen'){playGuideAudio();return;}
+    if(action==='show-guide'){startGuide(S.scene===6?'kitchen':'orders');return;}
+    if(action==='media-retry'){resumeStory();return;}
+    if (action === 'restart') { restart(); return; }
+    if (action === 'home') {
+      if (S.scene === 0) return;
+      if (activeMedia && !S.paused) togglePause();
+      $('#modal').innerHTML = `<div class="modal-shade"><section class="modal-card" role="dialog" aria-modal="true" aria-label="Go home"><h2>Go home?</h2><p>Start your lunch adventure again.</p><div class="modal-actions">${button('Continue', 'close-modal', 'play', true)}${button('Home', 'confirm-home', 'home')}</div></section></div>`; return;
+    }
+    if (action === 'confirm-home') { $('#modal').innerHTML = ''; restart(); return; }
+    if (action === 'close-modal') { $('#modal').innerHTML = ''; if (activeMedia && S.paused) togglePause(); return; }
+    if (action === 'mute') { S.muted = !S.muted; voice.muted = S.muted; sfx.muted = S.muted; if (activeMedia) video.muted = M[activeMedia.key].audioMode !== 'embedded' || S.muted; if(S.scene===7||S.scene>=4&&S.scene<=6&&S.countPhase==='check')render();else toolbar(); return; }
+    if (action === 'pause') { togglePause(); return; }
+    if (action === 'skip') { log('skip-media'); finishMedia(); return; }
+    if (action === 'back') { go(S.scene === 4 ? 2 : Math.max(0, S.scene - 1), { skipIntro: true }); return; }
+    if (action === 'next') { next(); return; }
+    if (action === 'discover') { openFoodCard(el); return; }
+    if (action === 'word') { say(el.dataset.word); return; }
+    if(action==='build-part'){if(performance.now()-lastPointerDrag>250)return buildPart(+el.dataset.part);return;}
+    if(action==='cook-more'){S.cookStep=0;S.busy=false;render();say('add_burger');return;}
+    if(action==='tray-add'){if(performance.now()-lastPointerDrag>250)trayAdd(el.dataset.kind);return;}
+    if(action==='tray-remove')return trayRemove(+el.dataset.index);
+    if(action==='serve-tray')return serveTray();
+    if (action === 'add-one' || action === 'egg-add') { if (performance.now() - lastPointerDrag > 250) changeCount(1); return; }
+    if (action === 'remove-one') { changeCount(-1); return; }
+    if (action === 'count-check') {
+      const k = kindNow(), response = k + (+el.dataset.count > 1 ? 's' : ''), right = response === D.checks[k];
+      S.selected = +el.dataset.count;
+      log('count-check', { kind: k, response, correct: right });
+      if (right) { S.countPassed[k] = true; S.feedback = 'That’s right!'; S.tone = ''; effect('correct'); render(); praise([response, 'nice']); }
+      else { S.feedback = 'Listen again. One or more?'; S.tone = 'retry'; render(); sequence(['retry', D.checks[k]]); } return;
+    }
+    if (action === 'choose-order') {
+      if (S.answered || !S.heard) return;
+      const i = +el.dataset.index, [k, n] = S.orderOptions[i], q = D.orders[S.order], right = k === q.answer[0] && n === q.answer[1];
+      const record = S.orders[S.order] ||= { id: q.id, attempts: 0, assisted: S.muted || S.audioFailed };
+      record.attempts++; record.correct = right; record.assisted ||= S.muted || S.audioFailed || record.attempts >= 2 && !right;
+      S.selected = i; log('order-answer', { id: q.id, kind: k, count: n, correct: right });
+      if (right) { S.answered = true; S.feedback = 'Delivered!'; S.tone = ''; effect('correct'); render(); praise([q.word, 'correct']); }
+      else { S.feedback = 'Listen again. One or more?'; S.tone = 'retry'; render(); sequence(['retry', q.word]); } return;
+    }
+    if (action === 'select-label') { S.selected = el.dataset.word; S.feedback = ''; S.tone = ''; render(); say(S.selected); return; }
+    if (action === 'submit-label') {
+      if (!S.selected || S.answered) return;
+      const q = D.labels[S.label], right = S.selected === q.answer;
+      const record = S.labelResults[S.label] ||= { kind: q.kind, count: q.count, attempts: 0 };
+      record.attempts++; record.correct = right; log('label-answer', { selected: S.selected, expected: q.answer, correct: right });
+      if (right) { S.answered = true; S.feedback = 'A perfect match!'; S.tone = ''; effect('correct'); render(); praise([q.answer, 'nice']); }
+      else { S.feedback = 'Look again. One or more?'; S.tone = 'retry'; render(); say('retry'); } return;
+    }
+    if (action === 'listen') {
+      if (S.scene === 7 || S.scene >= 4 && S.scene <= 6 && S.countPhase === 'check') return hearTarget();
+      if (S.scene >= 4 && S.scene <= 6) return say(kindNow() + (S.count > 1 ? 's' : ''));
+      if (S.scene === 2) return say(S.discovered.at(-1) || 'open');
+      if (S.scene === 9) return say('review');
+    }
+  }
+  function togglePause() {
+    if(S.paused&&$('.media-retry')){resumeStory();return;}
+    if (!activeMedia) return;
+    S.paused = !S.paused;
+    if (S.paused) { voice.pause(); video.pause(); }
+    else { if (video.getAttribute('src')) video.play().catch(() => {}); if (voice.src && (M[activeMedia.key].audioMode !== 'embedded' || activeMedia.fallback)) voice.play().catch(() => {}); }
+    toolbar();
+  }
+  stage.addEventListener('click', e => { const el = e.target.closest('[data-action]'); if (el) onAction(el.dataset.action, el); });
+  stage.addEventListener('pointermove', e => { if (S.scene !== 0 && !S.done) return; const r=stage.getBoundingClientRect(); stage.style.setProperty('--pointer-x',`${((e.clientX-r.left)/r.width-.5)*12}px`); stage.style.setProperty('--pointer-y',`${((e.clientY-r.top)/r.height-.5)*8}px`); });
+  stage.addEventListener('pointerleave',()=>{stage.style.setProperty('--pointer-x','0px');stage.style.setProperty('--pointer-y','0px');});
+  function cancelFoodDrag() {
+    if(!drag)return;const d=drag;drag=null;
+    d.el.classList.remove('is-held');d.ghost?.remove();
+    document.querySelectorAll('.drop-hint').forEach(el=>el.classList.remove('drop-hint'));
+  }
+  stage.addEventListener('pointerdown',e=>{
+    const special=e.target.closest('[data-order-food],[data-piece]');
+    if(special&&!special.disabled&&!S.busy&&e.button===0){const r=stage.getBoundingClientRect(),scale=r.width/1920;const ghost=special.cloneNode(true);ghost.className='play-drag-ghost '+(special.dataset.piece!==undefined?'ingredient':'pantry-food');ghost.removeAttribute('data-action');ghost.style.left=((e.clientX-r.left)/scale-90)+'px';ghost.style.top=((e.clientY-r.top)/scale-90)+'px';stage.append(ghost);special.setPointerCapture(e.pointerId);drag={el:special,ghost,id:e.pointerId,x:e.clientX,y:e.clientY,moved:false,type:special.dataset.piece!==undefined?'piece':'order',value:special.dataset.piece??special.dataset.orderFood};e.preventDefault();return;}
+    const el=e.target.closest('[data-drag]');
+    if(!el||el.disabled||S.busy||e.button!==0)return;
+    const r=stage.getBoundingClientRect(),scale=r.width/1920;
+    const ghost=document.createElement('div');ghost.className='food-ghost';ghost.innerHTML=`<img src="assets/images/${kindNow()}.webp" alt="" draggable="false">`;
+    ghost.style.left=`${(e.clientX-r.left)/scale-70}px`;ghost.style.top=`${(e.clientY-r.top)/scale-80}px`;
+    stage.append(ghost);el.classList.add('is-held');el.setPointerCapture(e.pointerId);
+    drag={el,ghost,id:e.pointerId,x:e.clientX,y:e.clientY,moved:false,type:el.dataset.drag};
+    $(drag.type==='add'?'#drop-zone':'#return-zone').classList.add('drop-hint');e.preventDefault();
+  });
+  stage.addEventListener('pointermove',e=>{
+    if(!drag||drag.id!==e.pointerId)return;
+    const r=stage.getBoundingClientRect(),scale=r.width/1920;
+    if(Math.hypot(e.clientX-drag.x,e.clientY-drag.y)>8*scale)drag.moved=true;
+    drag.ghost.style.left=`${(e.clientX-r.left)/scale-70}px`;drag.ghost.style.top=`${(e.clientY-r.top)/scale-80}px`;
+  });
+  stage.addEventListener('pointerup',e=>{
+    if(!drag||drag.id!==e.pointerId)return;
+    const d=drag;
+    if(['piece','order'].includes(d.type)){const z=$(d.type==='piece'?'#burger-build-zone':'#order-tray').getBoundingClientRect(),good=d.moved&&e.clientX>=z.left&&e.clientX<=z.right&&e.clientY>=z.top&&e.clientY<=z.bottom;cancelFoodDrag();if(d.moved)lastPointerDrag=performance.now();if(good){if(d.type==='piece')buildPart(+d.value);else trayAdd(d.value);}else if(!d.moved){lastPointerDrag=performance.now();if(d.type==='piece')buildPart(+d.value);else trayAdd(d.value);}return;}
+    const zone=$(d.type==='add'?'#drop-zone':'#return-zone').getBoundingClientRect();
+    const good=d.moved&&e.clientX>=zone.left&&e.clientX<=zone.right&&e.clientY>=zone.top&&e.clientY<=zone.bottom;
+    lastPointerDrag=performance.now();
+    if(good){cancelFoodDrag();changeCount(d.type==='add'?1:-1);}
+    else {
+      const bounds=stage.getBoundingClientRect(),scale=bounds.width/1920,origin=d.el.getBoundingClientRect();
+      const dx=(origin.left+origin.width/2-e.clientX)/scale,dy=(origin.top+origin.height/2-e.clientY)/scale;
+      d.el.classList.remove('is-held');document.querySelectorAll('.drop-hint').forEach(el=>el.classList.remove('drop-hint'));drag=null;
+      d.ghost.animate([{transform:'translate(0,0)'},{transform:`translate(${dx}px,${dy}px)`,opacity:0}],{duration:220,easing:'ease-out'}).finished.finally(()=>d.ghost.remove());
+      if(d.moved){effect('tap');log('drag-return');}
+    }
+  });
+  stage.addEventListener('pointercancel',cancelFoodDrag);
+  stage.addEventListener('keydown',e=>{
+    if(!['Enter',' '].includes(e.key))return;
+    const token=e.target.closest('[data-drag]'),zone=e.target.closest('[data-drop]');
+    if(token&&!token.disabled&&!S.busy){e.preventDefault();S.keyboardPick=token.dataset.drag;$(S.keyboardPick==='add'?'#drop-zone':'#return-zone').focus();}
+    else if(zone&&S.keyboardPick===zone.dataset.drop&&!S.busy){e.preventDefault();const delta=S.keyboardPick==='add'?1:-1;S.keyboardPick=null;changeCount(delta);}
+  });
+  document.addEventListener('visibilitychange', () => { if (document.hidden && activeMedia && !S.paused) togglePause(); });
+  const inkCanvas = document.createElement('canvas'), inkContext = inkCanvas.getContext('2d');
+  function alignInk(el) {
+    const c = getComputedStyle(el); inkContext.font = `${c.fontSize} ${c.fontFamily}`;
+    const m = inkContext.measureText(el.textContent);
+    el.style.setProperty('--ink-shift', '0px');
+    const marker = document.createElement('i'); marker.style.cssText='display:inline-block;width:0;height:0;padding:0;margin:0;vertical-align:baseline'; el.append(marker);
+    const scale=stage.getBoundingClientRect().width/1920, baseline=marker.getBoundingClientRect().top, box=el.parentElement.getBoundingClientRect(); marker.remove();
+    const inkCenter=baseline+(m.actualBoundingBoxDescent-m.actualBoundingBoxAscent)*scale/2;
+    const shift=(box.top+box.height/2-inkCenter)/scale;
+    el.style.setProperty('--ink-shift', `${Number.isFinite(shift) && Math.abs(shift)<70 ? shift : 0}px`);
+  }
+  function alignText() {
+    for (const el of screen.querySelectorAll('h1,h2,.hint,.feedback>span,.progress,.round-caption,.sound-help')) {
+      if (!el.querySelector('.ink') && el.textContent.trim()) { const span = document.createElement('span'); span.className='ink'; while(el.firstChild)span.append(el.firstChild); el.append(span); }
+    }
+    screen.querySelectorAll('.ink').forEach(alignInk);
+  }
+  new MutationObserver(() => { textObserver.disconnect(); alignText(); textObserver.observe(screen,{childList:true,subtree:true}); }).observe(stage,{attributes:true,attributeFilter:['data-scene','data-phase','data-done']});
+  const textObserver = new MutationObserver(() => { textObserver.disconnect(); alignText(); textObserver.observe(screen,{childList:true,subtree:true}); });
+  textObserver.observe(screen,{childList:true,subtree:true});
+  function layoutReport() {
+    const bounds = stage.getBoundingClientRect(), scale = bounds.width / 1920, items = [];
+    for (const el of stage.querySelectorAll('button,h1,h2,p,.feedback,.word,.progress,.story-caption,.invite-caption')) {
+      const r = el.getBoundingClientRect(), c = getComputedStyle(el); if (!r.width || !r.height || c.visibility === 'hidden') continue;
+      const text = el.innerText.trim(), inStage = r.left >= bounds.left - 1 && r.top >= bounds.top - 1 && r.right <= bounds.right + 1 && r.bottom <= bounds.bottom + 1;
+      items.push({ tag: el.tagName, text, action: el.dataset.action || '', font: c.fontFamily, size: parseFloat(c.fontSize), width: +(r.width / scale).toFixed(1), height: +(r.height / scale).toFixed(1), inStage, overflowing: el.scrollWidth > el.clientWidth + 2 || el.scrollHeight > el.clientHeight + 2, chinese: /[\u3400-\u9fff]/.test(text) });
+    }
+    return { scene: S.scene, phase: S.phase, viewport: [innerWidth, innerHeight], fonts: ['Heinemann Roman','Heinemann Bold','FZ Round Bold'].map(f => ({ name: f, loaded: document.fonts.check(`40px "${f}"`) })), pageScroll: document.documentElement.scrollWidth > innerWidth || document.documentElement.scrollHeight > innerHeight, items };
+  }
+  window.BOBO = { snapshot: () => JSON.parse(JSON.stringify(S)), layoutReport, go: (n, opts = {}) => go(n, opts) };
+  document.fonts.addEventListener('loadingdone', alignText);
+  Promise.all(['Heinemann Roman','Heinemann Bold','FZ Round Bold'].map(f => document.fonts.load(`40px "${f}"`))).then(alignText);
+  render(); requestAnimationFrame(()=>{playCoverCue();if(S.scene===0)say('cover_title',{quiet:true});});
+  document.fonts.ready.then(() => { alignText(); log('fonts-ready'); if (new URLSearchParams(location.search).has('scene')) { const n = Number(new URLSearchParams(location.search).get('scene')); if (Number.isInteger(n) && n >= 0 && n <= 9) go(n, { skipIntro: true }); } });
+})();
+
+</script>
+</body>
+</html>
